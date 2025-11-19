@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Asis Virtual Companion</string>
+    <string name="welcome_title">Welcome to Asis</string>
+    <string name="welcome_subtitle">Your Virtual Companion</string>
+    <string name="loading">Loading...</string>
+    <string name="error_occurred">An error occurred</string>
+    <string name="retry">Retry</string>
+    
+    <!-- Navigation titles -->
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_settings">Settings</string>
+</resources>

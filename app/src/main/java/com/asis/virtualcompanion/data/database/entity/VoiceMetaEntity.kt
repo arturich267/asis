@@ -9,13 +9,17 @@ import androidx.room.PrimaryKey
     tableName = "voice_meta",
     indices = [
         Index(value = ["emotion"], name = "idx_voice_emotion"),
-        Index(value = ["topic"], name = "idx_voice_topic")
+        Index(value = ["topic"], name = "idx_voice_topic"),
+        Index(value = ["sender"], name = "idx_voice_sender")
     ]
 )
 data class VoiceMetaEntity(
     @PrimaryKey
     @ColumnInfo(name = "clip_id")
     val clipId: String,
+    
+    @ColumnInfo(name = "sender")
+    val sender: String,
     
     @ColumnInfo(name = "emotion")
     val emotion: String? = null,

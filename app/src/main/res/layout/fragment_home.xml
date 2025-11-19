@@ -4,27 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_home_default"
     tools:context=".ui.main.HomeFragment">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- Settings Button - Top Right -->
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/home_settings_button_content_description"
+        android:src="@drawable/ic_settings_large"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Welcome Text - Center Top -->
     <LinearLayout
-        android:id="@+id/contentGroup"
-        android:layout_width="match_parent"
+        android:id="@+id/welcomeGroup"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,54 +37,79 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="Welcome to Asis" />
+            android:text="@string/home_welcome_title"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="28sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/welcomeSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="16sp"
-            tools:text="Your Virtual Companion" />
+            android:text="@string/home_welcome_subtitle"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/contentRefreshButton"
+        <TextView
+            android:id="@+id/profileSummary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/retry" />
+            android:layout_marginTop="8dp"
+            android:text="@string/home_last_profile_summary"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 
+    <!-- Bottom Button Container -->
     <LinearLayout
-        android:id="@+id/errorGroup"
-        android:layout_width="match_parent"
+        android:id="@+id/buttonContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="48dp"
         android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="gone"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/errorMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="16sp"
-            tools:text="An error occurred" />
+        <!-- Voice Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/voiceButton"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="32dp"
+            android:contentDescription="@string/home_voice_button_content_description"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="40dp"
+            app:icon="@drawable/ic_voice"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="36dp"
+            app:iconTint="?attr/colorOnPrimary" />
 
-        <Button
-            android:id="@+id/errorRefreshButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/retry" />
+        <!-- Chat Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chatButton"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="32dp"
+            android:contentDescription="@string/home_chat_button_content_description"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="40dp"
+            app:icon="@drawable/ic_chat"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="36dp"
+            app:iconTint="?attr/colorOnPrimary" />
 
     </LinearLayout>
 

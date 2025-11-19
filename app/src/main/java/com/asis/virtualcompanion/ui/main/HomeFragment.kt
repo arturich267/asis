@@ -6,19 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.asis.virtualcompanion.R
-import com.asis.virtualcompanion.common.UiState
 import com.asis.virtualcompanion.databinding.FragmentHomeBinding
 
 /**
- * Home fragment showing welcome screen
+ * Home fragment with voice and chat interaction buttons
  */
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,52 +36,55 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is UiState.Loading -> {
-                    showLoading(true)
-                }
-                is UiState.Success -> {
-                    showLoading(false)
-                    showContent(state.data)
-                }
-                is UiState.Error -> {
-                    showLoading(false)
-                    showError(state.message)
-                }
-                is UiState.Idle -> {
-                    showLoading(false)
-                }
-            }
+        viewModel.surfaceState.observe(viewLifecycleOwner) { state ->
+            updateUI(state)
         }
     }
 
     private fun setupClickListeners() {
-        binding.contentRefreshButton.setOnClickListener {
-            viewModel.refreshData()
+        binding.settingsButton.setOnClickListener {
+            viewModel.onSettingsClicked()
+            navigateToSettings()
         }
-        binding.errorRefreshButton.setOnClickListener {
-            viewModel.refreshData()
+        
+        binding.voiceButton.setOnClickListener {
+            viewModel.onVoiceClicked()
+            navigateToVoice()
+        }
+        
+        binding.chatButton.setOnClickListener {
+            viewModel.onChatClicked()
+            navigateToChat()
         }
     }
 
-    private fun showLoading(show: Boolean) {
-        binding.progressBar.visibility = if (show) View.VISIBLE else View.GONE
-        binding.contentGroup.visibility = if (show) View.GONE else View.VISIBLE
-        binding.errorGroup.visibility = View.GONE
+    private fun updateUI(state: HomeSurfaceState) {
+        // Update background if needed
+        binding.root.setBackgroundResource(state.currentBackgroundRes)
+        
+        // Update profile summary if available
+        if (state.lastProfileSummary.isNotEmpty()) {
+            binding.profileSummary.text = state.lastProfileSummary
+            binding.profileSummary.visibility = View.VISIBLE
+        } else {
+            binding.profileSummary.visibility = View.GONE
+        }
+        
+        // Update button availability
+        binding.voiceButton.isEnabled = state.isVoiceAvailable
+        binding.chatButton.isEnabled = state.isChatAvailable
     }
 
-    private fun showContent(message: String) {
-        binding.contentGroup.visibility = View.VISIBLE
-        binding.errorGroup.visibility = View.GONE
-        binding.welcomeTitle.text = getString(R.string.welcome_title)
-        binding.welcomeSubtitle.text = message
+    private fun navigateToSettings() {
+        findNavController().navigate(R.id.action_home_to_settings)
     }
 
-    private fun showError(message: String) {
-        binding.contentGroup.visibility = View.GONE
-        binding.errorGroup.visibility = View.VISIBLE
-        binding.errorMessage.text = message
+    private fun navigateToVoice() {
+        findNavController().navigate(R.id.action_home_to_voice)
+    }
+
+    private fun navigateToChat() {
+        findNavController().navigate(R.id.action_home_to_chat)
     }
 
     override fun onDestroyView() {

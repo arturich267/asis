@@ -27,4 +27,12 @@
     <string name="permissions_denied_message">Some permissions were denied. The app needs these permissions to function properly. Please enable them in app settings.</string>
     <string name="permissions_go_to_settings">Go to Settings</string>
     <string name="permissions_cancel">Cancel</string>
+    
+    <!-- Home Screen -->
+    <string name="home_voice_button_content_description">Voice interaction button</string>
+    <string name="home_chat_button_content_description">Chat interaction button</string>
+    <string name="home_settings_button_content_description">Settings button</string>
+    <string name="home_welcome_title">Welcome to Asis</string>
+    <string name="home_welcome_subtitle">Your Virtual Companion</string>
+    <string name="home_last_profile_summary">No profile imported yet</string>
 </resources>

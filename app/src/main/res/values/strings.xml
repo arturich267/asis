@@ -57,4 +57,13 @@
     <string name="import_analyzing_patterns">Analyzing conversation patterns...</string>
     <string name="import_complete">Import complete!</string>
     <string name="import_failed">Import failed</string>
+    
+    <!-- Voice Interaction -->
+    <string name="voice_mode_random">Random Meme</string>
+    <string name="voice_mode_emotion">Emotion Response</string>
+    <string name="voice_press_hint">Press and hold 🎤 to record</string>
+    <string name="voice_recording_hint">Recording... Release to stop</string>
+    <string name="voice_no_response">No response yet</string>
+    <string name="voice_play">Play</string>
+    <string name="voice_pause">Pause</string>
 </resources>

@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.asis.virtualcompanion.data.model.VoiceInteractionMode
+import com.asis.virtualcompanion.data.model.VoiceRetentionPolicy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -24,6 +25,7 @@ class VoiceInteractionPreferences(private val context: Context) {
         val TTS_PITCH = floatPreferencesKey("tts_pitch")
         val TTS_SPEED = floatPreferencesKey("tts_speed")
         val TTS_LANGUAGE = stringPreferencesKey("tts_language")
+        val RETENTION_POLICY = stringPreferencesKey("voice_retention_policy")
     }
     
     val voiceMode: Flow<VoiceInteractionMode> = context.voiceInteractionDataStore.data
@@ -38,6 +40,14 @@ class VoiceInteractionPreferences(private val context: Context) {
     
     val useRealVoice: Flow<Boolean> = context.voiceInteractionDataStore.data
         .map { preferences -> preferences[Keys.USE_REAL_VOICE] ?: false }
+    
+    val retentionPolicy: Flow<VoiceRetentionPolicy> = context.voiceInteractionDataStore.data
+        .map { preferences ->
+            val storedValue = preferences[Keys.RETENTION_POLICY]
+                ?: VoiceRetentionPolicy.DELETE_IMMEDIATELY.name
+            runCatching { VoiceRetentionPolicy.valueOf(storedValue) }
+                .getOrDefault(VoiceRetentionPolicy.DELETE_IMMEDIATELY)
+        }
     
     val ttsPitch: Flow<Float> = context.voiceInteractionDataStore.data
         .map { preferences -> preferences[Keys.TTS_PITCH] ?: 1.0f }
@@ -60,6 +70,12 @@ class VoiceInteractionPreferences(private val context: Context) {
         }
     }
     
+    suspend fun setRetentionPolicy(policy: VoiceRetentionPolicy) {
+        context.voiceInteractionDataStore.edit { preferences ->
+            preferences[Keys.RETENTION_POLICY] = policy.name
+        }
+    }
+    
     suspend fun setTTSPitch(pitch: Float) {
         context.voiceInteractionDataStore.edit { preferences ->
             preferences[Keys.TTS_PITCH] = pitch
@@ -75,6 +91,12 @@ class VoiceInteractionPreferences(private val context: Context) {
     suspend fun setTTSLanguage(language: String) {
         context.voiceInteractionDataStore.edit { preferences ->
             preferences[Keys.TTS_LANGUAGE] = language
+        }
+    }
+    
+    suspend fun clearAll() {
+        context.voiceInteractionDataStore.edit { preferences ->
+            preferences.clear()
         }
     }
 }

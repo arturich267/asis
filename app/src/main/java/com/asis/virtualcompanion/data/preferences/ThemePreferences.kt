@@ -68,4 +68,10 @@ class ThemePreferences(private val context: Context) {
             preferences[PROCESS_AUDIO_OFFLINE_KEY] = processOffline
         }
     }
+    
+    suspend fun clearAll() {
+        context.dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
 }

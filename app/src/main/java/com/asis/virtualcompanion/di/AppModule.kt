@@ -6,6 +6,8 @@ import com.asis.virtualcompanion.data.database.AsisDatabase
 import com.asis.virtualcompanion.common.Constants
 import com.asis.virtualcompanion.data.repository.*
 import com.asis.virtualcompanion.domain.repository.*
+import com.asis.virtualcompanion.domain.MemeGenerator
+import com.asis.virtualcompanion.domain.service.TensorFlowLiteStyleClassifier
 
 /**
  * Simple dependency injection container
@@ -56,5 +58,31 @@ object AppModule {
     fun provideChatMessageRepository(context: Context): ChatMessageRepository {
         val database = provideDatabase(context)
         return ChatMessageRepositoryImpl(database.chatMessageDao())
+    }
+    
+    fun provideThemeRepository(context: Context): ThemeRepository {
+        return ThemeRepository(context, com.asis.virtualcompanion.data.preferences.ThemePreferences(context))
+    }
+    
+    fun provideSpeakerStyleRepository(): SpeakerStyleRepository {
+        return SpeakerStyleRepositoryImpl()
+    }
+    
+    fun provideConversationTopicRepository(): ConversationTopicRepository {
+        return ConversationTopicRepositoryImpl()
+    }
+    
+    fun provideTensorFlowLiteStyleClassifier(context: Context): TensorFlowLiteStyleClassifier {
+        return TensorFlowLiteStyleClassifier(context)
+    }
+    
+    fun provideMemeGenerator(context: Context): MemeGenerator {
+        return MemeGenerator(
+            phraseStatRepository = providePhraseStatRepository(context),
+            speakerStyleRepository = provideSpeakerStyleRepository(),
+            conversationTopicRepository = provideConversationTopicRepository(),
+            themeRepository = provideThemeRepository(context),
+            styleClassifier = provideTensorFlowLiteStyleClassifier(context)
+        )
     }
 }

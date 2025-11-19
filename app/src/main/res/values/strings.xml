@@ -66,4 +66,13 @@
     <string name="voice_no_response">No response yet</string>
     <string name="voice_play">Play</string>
     <string name="voice_pause">Pause</string>
+    
+    <!-- Chat Overlay -->
+    <string name="chat_title">Chat</string>
+    <string name="chat_empty_state">Start a conversation! 💬</string>
+    <string name="chat_input_hint">Type a message...</string>
+    <string name="chat_send_button_content_description">Send message</string>
+    <string name="chat_generating_response">Generating response...</string>
+    <string name="chat_error_sending">Failed to send message</string>
+    <string name="chat_error_generating">Failed to generate response</string>
 </resources>

@@ -8,6 +8,7 @@
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
         
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>

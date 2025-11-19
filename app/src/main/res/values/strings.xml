@@ -40,13 +40,35 @@
     <string name="settings_archive_title">Archive Import</string>
     <string name="settings_select_archive">Select Archive</string>
     <string name="settings_no_archive_selected">No archive selected</string>
+    <string name="settings_archive_selected">Archive selected: %1$s</string>
     <string name="settings_parsing_archive">Parsing archive...</string>
+    <string name="settings_parsing_archive_progress">Parsing archive... %1$d%%</string>
     <string name="settings_theme_title">Appearance</string>
     <string name="settings_theme_preview">Theme Preview</string>
     <string name="settings_preview_button">Button</string>
     <string name="settings_privacy_title">Privacy &amp; Preferences</string>
     <string name="settings_use_real_voice">Use Real Voice Snippets</string>
     <string name="settings_process_audio_offline">Process Audio Offline</string>
+    <string name="settings_external_access_title">External storage access</string>
+    <string name="settings_external_access_placeholder">No external archive selected</string>
+    <string name="settings_external_access_description">External storage access granted for %1$s. Files stay on this device.</string>
+    <string name="settings_revoke_access">Revoke</string>
+    <string name="settings_privacy_local_processing_badge">All processing is handled locally</string>
+    <string name="settings_voice_retention_heading">Voice recording privacy</string>
+    <string name="settings_retain_voice_recordings">Retain recordings</string>
+    <string name="settings_delete_voice_recordings">Delete after response</string>
+    <string name="settings_voice_retention_description">Choose whether live mic recordings are kept in secure app storage or erased immediately after a response is generated.</string>
+    <string name="settings_privacy_policy_description">Review how Asis uses your data and learn more about the on-device safeguards.</string>
+    <string name="settings_privacy_policy_button">View Privacy Policy</string>
+    <string name="settings_clear_data">Clear all data</string>
+    <string name="settings_clearing_data">Clearing data…</string>
+    <string name="settings_clear_data_title">Clear all data?</string>
+    <string name="settings_clear_data_message">This removes imported chats, cached archives, temporary audio files, and resets every preference. This action cannot be undone.</string>
+    <string name="settings_clear_data_confirm">Delete everything</string>
+    <string name="settings_clear_data_cancel">Cancel</string>
+    <string name="settings_clear_data_success">All app data was removed from this device.</string>
+    <string name="settings_clear_data_error_generic">We couldn't clear everything. Please try again.</string>
+    <string name="settings_external_access_revoked">External storage access revoked.</string>
     
     <!-- WhatsApp Import -->
     <string name="import_validating_archive">Validating archive...</string>
@@ -75,4 +97,16 @@
     <string name="chat_generating_response">Generating response...</string>
     <string name="chat_error_sending">Failed to send message</string>
     <string name="chat_error_generating">Failed to generate response</string>
-</resources>
+    <!-- Privacy Policy -->
+    <string name="settings_privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_section_processing_title">On-device processing</string>
+    <string name="privacy_policy_section_processing_body">All imports, meme generation, and emotion detection run entirely on your phone. The app never uploads your WhatsApp archive or microphone input to remote servers.</string>
+    <string name="privacy_policy_section_storage_title">Data storage</string>
+    <string name="privacy_policy_section_storage_body">Imported chats, analytics, and generated context stay inside the local Room database. Voice recordings live in encrypted app storage and respect your retention preference.</string>
+    <string name="privacy_policy_section_audio_title">Audio controls</string>
+    <string name="privacy_policy_section_audio_body">You decide if microphone captures are retained for future playback or deleted right after a response is spoken. Temporary audio files never leave this device.</string>
+    <string name="privacy_policy_section_controls_title">Your controls</string>
+    <string name="privacy_policy_section_controls_body">Revoke external storage access, disable real voice playback, require offline processing, or wipe every bit of stored data from Settings → Privacy &amp; Preferences.</string>
+    <string name="privacy_policy_last_updated">Last updated: %1$s</string>
+    <string name="privacy_policy_close_content_description">Close privacy policy</string>
+    </resources>

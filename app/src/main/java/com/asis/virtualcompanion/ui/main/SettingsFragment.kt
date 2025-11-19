@@ -6,12 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.asis.virtualcompanion.R
+import com.asis.virtualcompanion.data.model.VoiceRetentionPolicy
 import com.asis.virtualcompanion.databinding.FragmentSettingsBinding
 import com.asis.virtualcompanion.data.preferences.ThemePreferences
 import com.asis.virtualcompanion.domain.repository.ThemeRepository
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 class SettingsFragment : Fragment() {
 
@@ -19,6 +25,7 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: SettingsViewModel
+    private var suppressRetentionToggle = false
 
     private val archivePickerLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocument()
@@ -67,6 +74,27 @@ class SettingsFragment : Fragment() {
         binding.processAudioOfflineToggle.setOnCheckedChangeListener { _, isChecked ->
             viewModel.toggleProcessAudioOffline(isChecked)
         }
+
+        binding.voiceRetentionToggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked || suppressRetentionToggle) return@addOnButtonCheckedListener
+            val policy = when (checkedId) {
+                R.id.retain_recordings_button -> VoiceRetentionPolicy.RETAIN
+                else -> VoiceRetentionPolicy.DELETE_IMMEDIATELY
+            }
+            viewModel.updateVoiceRetentionPolicy(policy)
+        }
+
+        binding.revokeExternalAccessButton.setOnClickListener {
+            viewModel.revokeArchiveAccess()
+        }
+
+        binding.privacyPolicyButton.setOnClickListener {
+            viewModel.openPrivacyPolicy()
+        }
+
+        binding.clearDataButton.setOnClickListener {
+            showClearDataConfirmation()
+        }
     }
 
     private fun observeViewModel() {
@@ -79,8 +107,33 @@ class SettingsFragment : Fragment() {
                 is SettingsViewModel.NavigationEvent.SelectArchive -> {
                     archivePickerLauncher.launch(arrayOf("application/zip", "application/octet-stream"))
                 }
+                is SettingsViewModel.NavigationEvent.PrivacyPolicy -> {
+                    findNavController().navigate(R.id.action_settings_to_privacyPolicy)
+                }
             }
         }
+
+        viewModel.statusMessage.observe(viewLifecycleOwner) { message ->
+            message?.let {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                viewModel.onStatusMessageShown()
+            }
+        }
+    }
+
+    private fun showClearDataConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.settings_clear_data_title)
+            .setMessage(R.string.settings_clear_data_message)
+            .setPositiveButton(R.string.settings_clear_data_confirm) { _, _ ->
+                viewModel.clearAllData()
+            }
+            .setNegativeButton(R.string.settings_clear_data_cancel, null)
+            .show()
+    }
+
+    private fun formatArchiveLabel(uri: String): String {
+        return Uri.parse(uri).lastPathSegment ?: uri
     }
 
     private fun updateUIState(state: SettingsUiState) {
@@ -102,21 +155,54 @@ class SettingsFragment : Fragment() {
         }
 
         binding.archiveStatusText.text = state.archiveUri?.let { uri ->
-            "Archive selected: ${Uri.parse(uri).lastPathSegment}"
-        } ?: "No archive selected"
+            getString(R.string.settings_archive_selected, formatArchiveLabel(uri))
+        } ?: getString(R.string.settings_no_archive_selected)
 
         if (state.archiveParsingInProgress) {
             binding.parsingProgressBar.visibility = View.VISIBLE
             binding.parsingProgressBar.progress = state.archiveParsingProgress
-            binding.parsingStatusText.text = "Parsing archive... ${state.archiveParsingProgress}%"
             binding.parsingStatusText.visibility = View.VISIBLE
+            binding.parsingStatusText.text = getString(
+                R.string.settings_parsing_archive_progress,
+                state.archiveParsingProgress
+            )
         } else {
             binding.parsingProgressBar.visibility = View.GONE
             binding.parsingStatusText.visibility = View.GONE
         }
 
-        binding.useRealVoiceToggle.isChecked = state.useRealVoice
-        binding.processAudioOfflineToggle.isChecked = state.processAudioOffline
+        val hasExternalArchive = state.archiveUri != null
+        binding.externalStorageIndicatorCard.isVisible = hasExternalArchive
+        binding.revokeExternalAccessButton.isEnabled = hasExternalArchive
+        if (hasExternalArchive) {
+            binding.externalStorageStatusText.text = getString(
+                R.string.settings_external_access_description,
+                formatArchiveLabel(state.archiveUri!!)
+            )
+        }
+
+        if (binding.useRealVoiceToggle.isChecked != state.useRealVoice) {
+            binding.useRealVoiceToggle.isChecked = state.useRealVoice
+        }
+
+        if (binding.processAudioOfflineToggle.isChecked != state.processAudioOffline) {
+            binding.processAudioOfflineToggle.isChecked = state.processAudioOffline
+        }
+
+        val retentionButtonId = when (state.voiceRetentionPolicy) {
+            VoiceRetentionPolicy.RETAIN -> R.id.retain_recordings_button
+            VoiceRetentionPolicy.DELETE_IMMEDIATELY -> R.id.delete_recordings_button
+        }
+        if (binding.voiceRetentionToggleGroup.checkedButtonId != retentionButtonId) {
+            suppressRetentionToggle = true
+            binding.voiceRetentionToggleGroup.check(retentionButtonId)
+            suppressRetentionToggle = false
+        }
+
+        binding.clearDataButton.isEnabled = !state.isClearingData
+        binding.clearDataButton.text = getString(
+            if (state.isClearingData) R.string.settings_clearing_data else R.string.settings_clear_data
+        )
 
         state.error?.let {
             binding.errorText.text = it

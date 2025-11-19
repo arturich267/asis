@@ -70,6 +70,69 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/external_storage_indicator_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/parsing_status_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_settings"
+                    android:tint="?attr/colorPrimary"
+                    android:contentDescription="@string/settings_external_access_title" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/external_storage_status_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_external_access_title"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/external_storage_status_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_external_access_placeholder"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/revoke_external_access_button"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="@string/settings_revoke_access" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Theme Section -->
         <TextView
             android:id="@+id/theme_title"
@@ -80,7 +143,7 @@
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface"
             android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/parsing_status_text"
+            app:layout_constraintTop_toBottomOf="@id/external_storage_indicator_card"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -174,6 +237,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <LinearLayout
+            android:id="@+id/privacy_section_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -181,6 +245,17 @@
             app:layout_constraintTop_toBottomOf="@id/privacy_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/local_processing_badge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/settings_privacy_local_processing_badge"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -226,7 +301,91 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/settings_voice_retention_heading"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/voice_retention_toggle_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/retain_recordings_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/settings_retain_voice_recordings" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/delete_recordings_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/settings_delete_voice_recordings" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <TextView
+                android:id="@+id/voice_retention_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:text="@string/settings_voice_retention_description"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12sp" />
+
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/privacy_policy_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/settings_privacy_policy_description"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="13sp"
+            app:layout_constraintTop_toBottomOf="@id/privacy_section_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/privacy_policy_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/settings_privacy_policy_button"
+            style="@style/Widget.Material3.Button.FilledTonalButton"
+            app:layout_constraintTop_toBottomOf="@id/privacy_policy_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/clear_data_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/settings_clear_data"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:layout_constraintTop_toBottomOf="@id/privacy_policy_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Error Text -->
         <TextView
@@ -239,7 +398,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/privacy_title"
+            app:layout_constraintTop_toBottomOf="@id/clear_data_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

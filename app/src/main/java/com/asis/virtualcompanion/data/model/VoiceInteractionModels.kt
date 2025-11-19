@@ -20,6 +20,11 @@ enum class VoiceInteractionMode {
     EMOTION_RESPONSE
 }
 
+enum class VoiceRetentionPolicy {
+    RETAIN,
+    DELETE_IMMEDIATELY
+}
+
 enum class AudioPlaybackState {
     IDLE,
     LOADING,

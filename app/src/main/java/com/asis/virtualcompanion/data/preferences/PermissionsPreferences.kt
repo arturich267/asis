@@ -27,4 +27,10 @@ class PermissionsPreferences(private val context: Context) {
             preferences[PERMISSIONS_GRANTED_KEY] = granted
         }
     }
+    
+    suspend fun clear() {
+        context.dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
 }

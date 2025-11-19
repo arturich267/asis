@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.asis.virtualcompanion.data.database.AsisDatabase
 import com.asis.virtualcompanion.common.Constants
+import com.asis.virtualcompanion.data.repository.*
+import com.asis.virtualcompanion.domain.repository.*
 
 /**
  * Simple dependency injection container
@@ -34,5 +36,25 @@ object AppModule {
         return _coroutineModule ?: synchronized(this) {
             _coroutineModule ?: CoroutineModule().also { _coroutineModule = it }
         }
+    }
+    
+    fun provideMessageRepository(context: Context): MessageRepository {
+        val database = provideDatabase(context)
+        return MessageRepositoryImpl(database.messageDao())
+    }
+    
+    fun providePhraseStatRepository(context: Context): PhraseStatRepository {
+        val database = provideDatabase(context)
+        return PhraseStatRepositoryImpl(database.phraseStatDao())
+    }
+    
+    fun provideVoiceRepository(context: Context): VoiceRepository {
+        val database = provideDatabase(context)
+        return VoiceRepositoryImpl(database.voiceMetaDao())
+    }
+    
+    fun provideChatMessageRepository(context: Context): ChatMessageRepository {
+        val database = provideDatabase(context)
+        return ChatMessageRepositoryImpl(database.chatMessageDao())
     }
 }

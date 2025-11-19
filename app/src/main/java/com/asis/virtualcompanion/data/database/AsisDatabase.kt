@@ -12,7 +12,11 @@ import com.asis.virtualcompanion.data.database.entity.*
  */
 @Database(
     entities = [
-        // Add entities here as they are created
+        MessageEntity::class,
+        PhraseStatEntity::class,
+        VoiceMetaEntity::class,
+        ChatMessageEntity::class,
+        ThemePreferenceEntity::class
     ],
     version = Constants.DATABASE_VERSION,
     exportSchema = false
@@ -20,7 +24,9 @@ import com.asis.virtualcompanion.data.database.entity.*
 @TypeConverters(Converters::class)
 abstract class AsisDatabase : RoomDatabase() {
     
-    // Add DAOs here as they are created
-    // abstract fun userDao(): UserDao
-    // abstract fun conversationDao(): ConversationDao
+    abstract fun messageDao(): MessageDao
+    abstract fun phraseStatDao(): PhraseStatDao
+    abstract fun voiceMetaDao(): VoiceMetaDao
+    abstract fun chatMessageDao(): ChatMessageDao
+    abstract fun themePreferenceDao(): ThemePreferenceDao
 }

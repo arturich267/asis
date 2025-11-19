@@ -12,7 +12,7 @@ import androidx.work.workDataOf
 import com.asis.virtualcompanion.data.model.Theme
 import com.asis.virtualcompanion.data.preferences.ThemePreferences
 import com.asis.virtualcompanion.domain.repository.ThemeRepository
-import com.asis.virtualcompanion.work.ArchiveParsingWorker
+import com.asis.virtualcompanion.work.ImportArchiveWorker
 import kotlinx.coroutines.launch
 
 data class SettingsUiState(
@@ -87,7 +87,7 @@ class SettingsViewModel(
         val currentState = _uiState.value ?: SettingsUiState()
         _uiState.value = currentState.copy(archiveParsingInProgress = true)
 
-        val workRequest = OneTimeWorkRequestBuilder<ArchiveParsingWorker>()
+        val workRequest = OneTimeWorkRequestBuilder<ImportArchiveWorker>()
             .setInputData(workDataOf("archive_uri" to uri))
             .build()
 

@@ -6,7 +6,7 @@ package com.asis.virtualcompanion.common
 object Constants {
     // Database
     const val DATABASE_NAME = "asis_database"
-    const val DATABASE_VERSION = 1
+    const val DATABASE_VERSION = 2
     
     // TFLite
     const val TFLITE_MODEL_PATH = "models/"
@@ -18,6 +18,10 @@ object Constants {
     // Work Manager
     const val SYNC_WORK_NAME = "sync_work"
     const val PROCESSING_WORK_NAME = "processing_work"
+    const val IMPORT_ARCHIVE_WORK_NAME = "import_archive_work"
+    
+    // Notifications
+    const val WHATSAPP_IMPORT_CHANNEL_ID = "whatsapp_import_channel"
     
     // SharedPreferences
     const val PREFS_NAME = "asis_prefs"

@@ -47,4 +47,14 @@
     <string name="settings_privacy_title">Privacy &amp; Preferences</string>
     <string name="settings_use_real_voice">Use Real Voice Snippets</string>
     <string name="settings_process_audio_offline">Process Audio Offline</string>
+    
+    <!-- WhatsApp Import -->
+    <string name="import_validating_archive">Validating archive...</string>
+    <string name="import_extracting_archive">Extracting archive...</string>
+    <string name="import_parsing_messages">Parsing chat messages...</string>
+    <string name="import_saving_messages">Saving messages...</string>
+    <string name="import_processing_voice_notes">Processing voice notes...</string>
+    <string name="import_analyzing_patterns">Analyzing conversation patterns...</string>
+    <string name="import_complete">Import complete!</string>
+    <string name="import_failed">Import failed</string>
 </resources>

@@ -11,6 +11,9 @@ interface VoiceMetaDao : BaseDao<VoiceMetaEntity> {
     @Query("SELECT * FROM voice_meta ORDER BY clip_id")
     fun getAllVoiceMeta(): Flow<List<VoiceMetaEntity>>
     
+    @Query("SELECT * FROM voice_meta WHERE sender = :sender")
+    fun getVoiceMetaBySender(sender: String): Flow<List<VoiceMetaEntity>>
+    
     @Query("SELECT * FROM voice_meta WHERE clip_id = :clipId")
     suspend fun getVoiceMetaByClipId(clipId: String): VoiceMetaEntity?
     

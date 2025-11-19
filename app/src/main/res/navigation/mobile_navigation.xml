@@ -3,7 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_permissions">
+
+    <fragment
+        android:id="@+id/navigation_permissions"
+        android:name="com.asis.virtualcompanion.ui.permissions.PermissionsFragment"
+        android:label="@string/title_permissions"
+        tools:layout="@layout/fragment_permissions">
+        <action
+            android:id="@+id/action_permissions_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_permissions"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"

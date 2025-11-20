@@ -76,6 +76,29 @@ app/
 
 ---
 
+## 📥 Download & Install
+
+### For End Users
+
+👉 **[Download Virtual Companion v1.0.0 APK](https://github.com/arturich267/asis-virtual-companion/releases/download/v1.0.0/app-release.apk)**
+
+**Quick Start:**
+1. Download the APK file
+2. Enable "Install from Unknown Sources" in Android settings
+3. Tap the APK to install
+4. Grant permissions and start chatting!
+
+For detailed instructions, see [INSTALL.md](INSTALL.md)
+
+### Release Information
+- **Version:** 1.0.0 (Stable)
+- **File:** app-release.apk
+- **Size:** ~50-100 MB
+- **Minimum Android:** 6.0 (API 23)
+- **Status:** Production Ready ✅
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites

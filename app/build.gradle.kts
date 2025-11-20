@@ -113,8 +113,8 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     
-    // FFmpeg Kit
-    implementation("com.arthenica:ffmpeg-kit-full:6.0.LTS")
+    // FFmpeg Kit - Min version (Full features)
+    implementation("com.arthenica:ffmpeg-kit-min:6.0")
     
     // Gson for JSON serialization
     implementation("com.google.code.gson:gson:2.10.1")

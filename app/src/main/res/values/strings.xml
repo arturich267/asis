@@ -48,6 +48,22 @@
     <string name="settings_use_real_voice">Use Real Voice Snippets</string>
     <string name="settings_process_audio_offline">Process Audio Offline</string>
     
+    <!-- Privacy Controls -->
+    <string name="settings_privacy_controls_title">Privacy Controls</string>
+    <string name="settings_retain_voice_recordings">Retain Voice Recordings</string>
+    <string name="settings_view_privacy_policy">View Privacy Policy</string>
+    <string name="settings_clear_all_data">Clear All Data</string>
+    
+    <!-- Privacy Policy -->
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_back_button_content_description">Back button</string>
+    
+    <!-- Clear Data Dialog -->
+    <string name="clear_data_confirmation_message">Are you sure you want to delete all data? This action cannot be undone.</string>
+    <string name="cancel">Cancel</string>
+    <string name="clear">Clear</string>
+    <string name="data_cleared_successfully">All data has been cleared successfully</string>
+    
     <!-- WhatsApp Import -->
     <string name="import_validating_archive">Validating archive...</string>
     <string name="import_extracting_archive">Extracting archive...</string>

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.asis.virtualcompanion.databinding.FragmentSettingsBinding
 import com.asis.virtualcompanion.data.preferences.ThemePreferences
 import com.asis.virtualcompanion.domain.repository.ThemeRepository
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SettingsFragment : Fragment() {
 
@@ -67,6 +68,18 @@ class SettingsFragment : Fragment() {
         binding.processAudioOfflineToggle.setOnCheckedChangeListener { _, isChecked ->
             viewModel.toggleProcessAudioOffline(isChecked)
         }
+
+        binding.privacyPolicyButton.setOnClickListener {
+            navigateToPrivacyPolicy()
+        }
+
+        binding.clearDataButton.setOnClickListener {
+            showClearDataDialog()
+        }
+
+        binding.retainVoiceToggle.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setVoiceRetentionToggle(isChecked)
+        }
     }
 
     private fun observeViewModel() {
@@ -117,6 +130,7 @@ class SettingsFragment : Fragment() {
 
         binding.useRealVoiceToggle.isChecked = state.useRealVoice
         binding.processAudioOfflineToggle.isChecked = state.processAudioOffline
+        binding.retainVoiceToggle.isChecked = state.retainVoiceRecordings
 
         state.error?.let {
             binding.errorText.text = it
@@ -124,6 +138,30 @@ class SettingsFragment : Fragment() {
         } ?: run {
             binding.errorText.visibility = View.GONE
         }
+    }
+
+    private fun navigateToPrivacyPolicy() {
+        // Navigate to privacy policy fragment
+        findNavController().navigate(R.id.action_settings_to_privacy_policy)
+    }
+
+    private fun showClearDataDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.settings_clear_all_data))
+            .setMessage(getString(R.string.clear_data_confirmation_message))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.clear)) { dialog, _ ->
+                viewModel.clearAllData()
+                showToast(getString(R.string.data_cleared_successfully))
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showToast(message: String) {
+        android.widget.Toast.makeText(requireContext(), message, android.widget.Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

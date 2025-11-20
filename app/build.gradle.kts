@@ -107,17 +107,14 @@ dependencies {
     // Media
     implementation("androidx.media:media:1.7.0")
     
-    // Text-to-Speech
-    implementation("androidx.speech:speech-recognition:1.0.0")
-    
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     
-    // FFmpeg (if available)
-    implementation("com.arthenica:ffmpeg-kit-full:6.0-2")
+    // FFmpeg Kit
+    implementation("com.arthenica:ffmpeg-kit-full:6.0-2.LTS")
     
     // Gson for JSON serialization
     implementation("com.google.code.gson:gson:2.10.1")

@@ -22,15 +22,30 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        
+        // Set output APK name
+        setProperty("archivesBaseName", "VirtualCompanion-v$versionName")
+    }
+
+    signingConfigs {
+        create("release") {
+            // Using debug keystore for now - in production, use proper release keystore
+            storeFile = file(System.getProperty("user.home") + "/.android/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     

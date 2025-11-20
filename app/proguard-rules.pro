@@ -12,13 +12,20 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve line number information for debugging stack traces
+-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Hide the original source file name
+-renamesourcefileattribute SourceFile
+
+# Keep annotations and signatures for runtime reflection
+-keepattributes *Annotation*, Signature, Exception
+
+# Optimization settings
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
 
 # TensorFlow Lite model protection
 -keep class org.tensorflow.lite.** { *; }
@@ -43,3 +50,44 @@
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
+
+# DataStore
+-keepclassmembers class * extends androidx.datastore.preferences.protobuf.GeneratedMessageLite {
+    <fields>;
+}
+
+# Navigation Component
+-keepnames class androidx.navigation.fragment.NavHostFragment
+-keep class * extends androidx.fragment.app.Fragment{}
+
+# ViewBinding
+-keep class * implements androidx.viewbinding.ViewBinding {
+    public static *** bind(android.view.View);
+    public static *** inflate(android.view.LayoutInflater);
+}
+
+# Keep ViewModel classes
+-keep class * extends androidx.lifecycle.ViewModel {
+    <init>();
+}
+-keep class * extends androidx.lifecycle.AndroidViewModel {
+    <init>(android.app.Application);
+}
+
+# Keep Fragment constructors
+-keepclassmembers class * extends androidx.fragment.app.Fragment {
+    public <init>();
+}
+
+# Gson specific classes
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.** { *; }
+
+# FFmpeg Kit
+-keep class com.arthenica.ffmpegkit.** { *; }
+-dontwarn com.arthenica.ffmpegkit.**
+
+# Keep application class
+-keep class com.asis.virtualcompanion.VirtualCompanionApp { *; }

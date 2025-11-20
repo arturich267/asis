@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
@@ -249,6 +250,10 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                         errorMessage = "Failed to generate response: ${memeResult.exception.message}"
                     )
                 }
+                // Delete user audio file if voice retention is disabled
+                if (!getVoiceRetentionSetting()) {
+                    audioFile.delete()
+                }
                 return@launch
             }
             
@@ -261,11 +266,11 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 )
             }
             
-            synthesizeAndPlay(memeResponse)
+            synthesizeAndPlay(memeResponse, audioFile)
         }
     }
     
-    private fun synthesizeAndPlay(memeResponse: MemeResponse) {
+    private fun synthesizeAndPlay(memeResponse: MemeResponse, userAudioFile: File? = null) {
         viewModelScope.launch {
             val ttsResult = ttsService.synthesizeToFile(
                 memeResponse.text,
@@ -317,6 +322,15 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                             error = "Failed to prepare audio for playback"
                         )
                     )
+                }
+            }
+        }
+        
+        // Delete user audio file if voice retention is disabled
+        userAudioFile?.let { audioFile ->
+            if (!getVoiceRetentionSetting()) {
+                withContext(Dispatchers.IO) {
+                    audioFile.delete()
                 }
             }
         }
@@ -427,6 +441,18 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 }
             } catch (e: Exception) {
                 // Ignore cleanup errors
+            }
+        }
+    }
+
+    private fun getVoiceRetentionSetting(): Boolean {
+        return runBlocking {
+            try {
+                // For now, return true as default
+                // In a real implementation, this would read from preferences
+                true
+            } catch (e: Exception) {
+                true // Default to retaining voice recordings
             }
         }
     }

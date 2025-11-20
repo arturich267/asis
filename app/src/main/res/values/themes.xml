@@ -21,4 +21,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    
+    <style name="Theme_AsisVirtualCompanion" parent="Theme.AsisVirtualCompanion" />
 </resources>

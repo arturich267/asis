@@ -22,4 +22,7 @@ interface ThemePreferenceDao : BaseDao<ThemePreferenceEntity> {
     
     @Query("DELETE FROM theme_preferences")
     suspend fun deleteAllPreferences(): Int
+    
+    @Query("SELECT COUNT(*) FROM theme_preferences")
+    suspend fun getThemePreferenceCount(): Int
 }

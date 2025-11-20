@@ -43,7 +43,15 @@
         android:id="@+id/navigation_settings"
         android:name="com.asis.virtualcompanion.ui.main.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settings_to_privacy_policy"
+            app:destination="@id/privacy_policy_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_voice"
@@ -56,4 +64,10 @@
         android:name="com.asis.virtualcompanion.ui.main.ChatFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat" />
+
+    <fragment
+        android:id="@+id/privacy_policy_fragment"
+        android:name="com.asis.virtualcompanion.ui.settings.PrivacyPolicyFragment"
+        android:label="@string/privacy_policy_title"
+        tools:layout="@layout/fragment_privacy_policy" />
 </navigation>

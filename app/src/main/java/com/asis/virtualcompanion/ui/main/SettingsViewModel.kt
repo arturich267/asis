@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.asis.virtualcompanion.data.model.Theme
 import com.asis.virtualcompanion.data.preferences.ThemePreferences
+import com.asis.virtualcompanion.data.repository.DataClearRepository
 import com.asis.virtualcompanion.domain.repository.ThemeRepository
 import com.asis.virtualcompanion.work.ImportArchiveWorker
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ data class SettingsUiState(
     val archiveParsingProgress: Int = 0,
     val useRealVoice: Boolean = false,
     val processAudioOffline: Boolean = false,
+    val retainVoiceRecordings: Boolean = true,
     val error: String? = null
 )
 
@@ -30,6 +32,8 @@ class SettingsViewModel(
     private val context: Context,
     private val themeRepository: ThemeRepository
 ) : ViewModel() {
+
+    private val dataClearRepository = DataClearRepository(context)
 
     private val _uiState = MutableLiveData<SettingsUiState>()
     val uiState: LiveData<SettingsUiState> = _uiState
@@ -67,6 +71,10 @@ class SettingsViewModel(
             val currentState = _uiState.value ?: SettingsUiState()
             _uiState.value = currentState.copy(processAudioOffline = processOffline)
         }
+
+        // Initialize voice retention preference
+        val currentState = _uiState.value ?: SettingsUiState()
+        _uiState.value = currentState.copy(retainVoiceRecordings = true)
     }
 
     fun selectTheme(themeId: String) {
@@ -127,6 +135,38 @@ class SettingsViewModel(
 
     fun requestArchiveSelection() {
         _navigationEvent.value = NavigationEvent.SelectArchive
+    }
+
+    fun clearAllData() {
+        viewModelScope.launch {
+            try {
+                // Clear all data from database
+                dataClearRepository.deleteAll()
+                
+                // Clear files and cache
+                dataClearRepository.deleteRecursively()
+                
+                // Clear preferences
+                dataClearRepository.clearPreferences()
+                
+                // Reset UI state
+                val currentState = _uiState.value ?: SettingsUiState()
+                _uiState.value = currentState.copy(
+                    archiveUri = null,
+                    archiveParsingInProgress = false,
+                    archiveParsingProgress = 0,
+                    error = null
+                )
+            } catch (e: Exception) {
+                val currentState = _uiState.value ?: SettingsUiState()
+                _uiState.value = currentState.copy(error = "Failed to clear data: ${e.message}")
+            }
+        }
+    }
+
+    fun setVoiceRetentionToggle(enabled: Boolean) {
+        val currentState = _uiState.value ?: SettingsUiState()
+        _uiState.value = currentState.copy(retainVoiceRecordings = enabled)
     }
 
     sealed class NavigationEvent {

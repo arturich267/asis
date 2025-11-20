@@ -25,4 +25,7 @@ interface PhraseStatDao : BaseDao<PhraseStatEntity> {
     
     @Query("SELECT SUM(count) FROM phrase_stats")
     suspend fun getTotalPhraseCount(): Int?
+    
+    @Query("SELECT COUNT(*) FROM phrase_stats")
+    suspend fun getPhraseStatCount(): Int
 }

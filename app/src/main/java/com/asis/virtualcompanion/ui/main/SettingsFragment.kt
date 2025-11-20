@@ -9,6 +9,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.asis.virtualcompanion.R
 import com.asis.virtualcompanion.databinding.FragmentSettingsBinding
 import com.asis.virtualcompanion.data.preferences.ThemePreferences
 import com.asis.virtualcompanion.domain.repository.ThemeRepository

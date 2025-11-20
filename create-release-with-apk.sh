@@ -1,16 +1,19 @@
 #!/bin/bash
 
-# Virtual Companion - GitHub Release Creation Script
-# This script creates a GitHub release with the APK file
+# Virtual Companion - GitHub Release Creation Script with APK Upload
+# This script creates a GitHub release and uploads the APK
 # 
 # Requirements:
-# - GitHub CLI (gh) installed: https://cli.github.com/
-# - Authenticated with GitHub: gh auth login
-# - Release APK already built: ./gradlew assembleRelease
+# - GitHub CLI (gh) installed
+# - Authenticated with GitHub: GITHUB_TOKEN environment variable or gh auth login
+# - Release APK already built: app/build/outputs/apk/release/app-release.apk
 #
 # Usage:
-#   ./create-release.sh                    # Create release from current directory
-#   ./create-release.sh --publish          # Create and publish release
+#   export GITHUB_TOKEN="your_token_here"
+#   ./create-release-with-apk.sh
+#   or
+#   gh auth login
+#   ./create-release-with-apk.sh
 
 set -e
 
@@ -46,50 +49,30 @@ print_header() {
     echo ""
 }
 
-# Check if gh CLI is installed
-if ! command -v gh &> /dev/null; then
-    print_error "GitHub CLI (gh) is not installed"
-    echo "Install from: https://cli.github.com/"
-    exit 1
-fi
+# Get repository info
+REPO_OWNER="arturich267"
+REPO_NAME="asis"
+TAG="v1.0.0"
+RELEASE_TITLE="Virtual Companion v1.0.0 - Final Release"
+
+print_header "Virtual Companion - GitHub Release Creator (with APK)"
 
 # Check if authenticated
 if ! gh auth status &> /dev/null; then
     print_error "Not authenticated with GitHub"
-    echo "Run: gh auth login"
+    echo "Options:"
+    echo "  1. Run: gh auth login"
+    echo "  2. Or set: export GITHUB_TOKEN='your_token_here'"
     exit 1
 fi
 
-print_header "Virtual Companion - GitHub Release Creator"
-
-# Check if tag exists
-TAG="v1.0.0"
-if ! git rev-parse "$TAG" >/dev/null 2>&1; then
-    print_info "Creating git tag: $TAG"
-    git tag -a "$TAG" -m "Virtual Companion v1.0.0 - Final Release" HEAD
-    git push origin "$TAG"
-    print_success "Tag created and pushed"
-else
-    print_info "Tag $TAG already exists"
-fi
+print_success "GitHub authentication verified"
 
 # Check if APK exists
 APK_PATH="app/build/outputs/apk/release/app-release.apk"
 if [ ! -f "$APK_PATH" ]; then
-    print_warning "APK not found at $APK_PATH"
-    print_info "Building release APK..."
-    
-    if [ ! -f "./gradlew" ]; then
-        print_error "gradlew not found! Are you in the project root?"
-        exit 1
-    fi
-    
-    ./gradlew clean assembleRelease
-fi
-
-# Verify APK exists
-if [ ! -f "$APK_PATH" ]; then
-    print_error "Failed to build APK"
+    print_error "APK not found at $APK_PATH"
+    print_info "Please build the APK first with: ./gradlew assembleRelease"
     exit 1
 fi
 
@@ -97,18 +80,29 @@ fi
 APK_SIZE=$(du -h "$APK_PATH" | cut -f1)
 print_success "APK found at: $APK_PATH (Size: $APK_SIZE)"
 
+# Check if tag exists, if not create it
+if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+    print_info "Creating git tag: $TAG"
+    git tag -a "$TAG" -m "$RELEASE_TITLE" HEAD
+    git push origin "$TAG"
+    print_success "Tag created and pushed"
+else
+    print_info "Tag $TAG already exists"
+fi
+
 # Check if release already exists
-if gh release view "$TAG" >/dev/null 2>&1; then
+if gh release view "$TAG" --repo "$REPO_OWNER/$REPO_NAME" >/dev/null 2>&1; then
     print_warning "Release $TAG already exists on GitHub"
     
-    read -p "Do you want to delete the existing release? (y/N): " -n 1 -r DELETE_CHOICE
+    read -p "Do you want to delete the existing release and recreate it? (y/N): " -n 1 -r DELETE_CHOICE
     echo
     if [[ $DELETE_CHOICE =~ ^[Yy]$ ]]; then
         print_info "Deleting existing release..."
-        gh release delete "$TAG" --yes
+        gh release delete "$TAG" --repo "$REPO_OWNER/$REPO_NAME" --yes
         print_success "Release deleted"
     else
         print_info "Skipping release creation"
+        print_success "Release already exists at: https://github.com/$REPO_OWNER/$REPO_NAME/releases/tag/$TAG"
         exit 0
     fi
 fi
@@ -120,14 +114,16 @@ if [ -f "GITHUB_RELEASE.md" ]; then
     print_info "Using GITHUB_RELEASE.md for release notes"
     gh release create "$TAG" \
         "$APK_PATH" \
-        --title "Virtual Companion v1.0.0 - Final Release" \
+        --repo "$REPO_OWNER/$REPO_NAME" \
+        --title "$RELEASE_TITLE" \
         --notes-file GITHUB_RELEASE.md \
         --draft=false
 else
     print_warning "GITHUB_RELEASE.md not found, using generic notes"
     gh release create "$TAG" \
         "$APK_PATH" \
-        --title "Virtual Companion v1.0.0 - Final Release" \
+        --repo "$REPO_OWNER/$REPO_NAME" \
+        --title "$RELEASE_TITLE" \
         --notes "Virtual Companion v1.0.0 - Final Release
 
 ## Финальная версия приложения \"Виртуальный собеседник\"
@@ -155,25 +151,14 @@ APK Details:
 - Size: $APK_SIZE
 - Minimum Android: 6.0 (API 23)
 
-For installation instructions, see INSTALL.md in the repository.
-
-Features:
-- 💬 Intelligent Chat
-- 🎤 Voice Interaction
-- 🤖 AI-Powered Meme Generator
-- 🎨 Customizable UI
-- 🔒 Privacy-First Design
-
-All data stored locally. No internet required.
-
 For more information, visit: https://github.com/arturich267/asis" \
         --draft=false
 fi
 
 print_success "Release created successfully!"
 echo ""
-echo "Release URL: https://github.com/arturich267/asis/releases/tag/$TAG"
-echo "Direct APK Download: https://github.com/arturich267/asis/releases/download/$TAG/app-release.apk"
+echo "Release URL: https://github.com/$REPO_OWNER/$REPO_NAME/releases/tag/$TAG"
+echo "Direct APK Download: https://github.com/$REPO_OWNER/$REPO_NAME/releases/download/$TAG/app-release.apk"
 echo ""
 
 print_info "Release Details:"
@@ -185,3 +170,6 @@ echo "  - Status: Published"
 echo ""
 
 print_success "All done! Your app is ready for download."
+echo ""
+echo "Verify the release:"
+echo "  https://github.com/$REPO_OWNER/$REPO_NAME/releases"

@@ -9,9 +9,9 @@ import com.asis.virtualcompanion.domain.repository.SpeakerStyleRepository
 import com.asis.virtualcompanion.domain.repository.ThemeRepository
 import com.asis.virtualcompanion.domain.service.TensorFlowLiteStyleClassifier
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
-import kotlin.random.asJavaRandom
 
 class MemeGenerator(
     private val phraseStatRepository: PhraseStatRepository,
@@ -20,6 +20,10 @@ class MemeGenerator(
     private val themeRepository: ThemeRepository,
     private val styleClassifier: TensorFlowLiteStyleClassifier
 ) {
+    
+    companion object {
+        private val WHITESPACE_REGEX = Regex("\\s+")
+    }
     
     private var random = Random(System.currentTimeMillis())
     
@@ -34,17 +38,21 @@ class MemeGenerator(
             
             // Get top phrases
             val topPhrasesResult = phraseStatRepository.getTopPhrases(20)
-            if (topPhrasesResult is Result.Error) {
-                return@withContext topPhrasesResult
+            val topPhrases = when (topPhrasesResult) {
+                is Result.Success -> topPhrasesResult.data
+                is Result.Error -> return@withContext topPhrasesResult
+                is Result.Loading -> return@withContext Result.Error(
+                    IllegalStateException("Unexpected loading state")
+                )
             }
-            val topPhrases = (topPhrasesResult as Result.Success).data
+            val resolvedTopPhrases = topPhrases.takeIf { it.isNotEmpty() } ?: defaultPhraseStats()
             
             // Get recent conversation topics
             val recentTopicsResult = conversationTopicRepository.getRecentTopics(5)
-            val recentTopics = if (recentTopicsResult is Result.Success) {
-                recentTopicsResult.data
-            } else {
-                emptyList()
+            val recentTopics = when (recentTopicsResult) {
+                is Result.Success -> recentTopicsResult.data
+                is Result.Error -> emptyList()
+                is Result.Loading -> emptyList()
             }
             
             // Determine style based on mode and context
@@ -61,14 +69,14 @@ class MemeGenerator(
             
             // Get speaker style details
             val speakerStyleResult = speakerStyleRepository.getSpeakerStyleByName(style)
-            val speakerStyle = if (speakerStyleResult is Result.Success) {
-                speakerStyleResult.data
-            } else {
-                createDefaultSpeakerStyle(style)
+            val speakerStyle = when (speakerStyleResult) {
+                is Result.Success -> speakerStyleResult.data ?: createDefaultSpeakerStyle(style)
+                is Result.Error -> createDefaultSpeakerStyle(style)
+                is Result.Loading -> createDefaultSpeakerStyle(style)
             }
             
             // Generate template
-            val template = generateTemplate(topPhrases, speakerStyle, config, recentTopics)
+            val template = generateTemplate(resolvedTopPhrases, speakerStyle, config, recentTopics)
             
             // Generate final response
             val responseText = generateResponseText(template, config)
@@ -84,7 +92,7 @@ class MemeGenerator(
                 text = responseText,
                 audioInstructions = audioInstructions,
                 template = template,
-                confidence = calculateConfidence(template, topPhrases, recentTopics)
+                confidence = calculateConfidence(template, resolvedTopPhrases, recentTopics)
             )
             
             Result.Success(response)
@@ -100,10 +108,10 @@ class MemeGenerator(
     }
     
     private suspend fun selectRandomStyle(): String {
-        val stylesResult = speakerStyleRepository.getAllSpeakerStyles()
-        val styles = if (stylesResult is Result.Success) {
-            stylesResult.data
-        } else {
+        val stylesFlow = speakerStyleRepository.getAllSpeakerStyles()
+        val styles = try {
+            stylesFlow.first()
+        } catch (e: Exception) {
             listOf("casual", "energetic", "playful", "friendly").map { 
                 SpeakerStyle(
                     id = it,
@@ -115,6 +123,12 @@ class MemeGenerator(
                 )
             }
         }
+        
+        // Ensure we have at least one style to select
+        if (styles.isEmpty()) {
+            return "casual"
+        }
+        
         return styles[random.nextInt(styles.size)].name
     }
     
@@ -124,10 +138,10 @@ class MemeGenerator(
     ): String {
         val contextText = recentTopics.joinToString(" ") { it.topic }
         val classificationResult = styleClassifier.classifyStyle(contextText, emotion)
-        return if (classificationResult is Result.Success) {
-            classificationResult.data
-        } else {
-            "casual"
+        return when (classificationResult) {
+            is Result.Success -> classificationResult.data
+            is Result.Error -> "casual"
+            is Result.Loading -> "casual"
         }
     }
     
@@ -141,10 +155,10 @@ class MemeGenerator(
             "topicCount" to recentTopics.size
         )
         val classificationResult = styleClassifier.classifyStyle(contextText, null, timeContext)
-        return if (classificationResult is Result.Success) {
-            classificationResult.data
-        } else {
-            getTimeBasedStyle(currentTime)
+        return when (classificationResult) {
+            is Result.Success -> classificationResult.data
+            is Result.Error -> getTimeBasedStyle(currentTime)
+            is Result.Loading -> getTimeBasedStyle(currentTime)
         }
     }
     
@@ -158,12 +172,17 @@ class MemeGenerator(
         }
     }
     
-    private fun generateTemplate(
+    private suspend fun generateTemplate(
         topPhrases: List<PhraseStatEntity>,
         speakerStyle: SpeakerStyle?,
         config: MemeGenerationConfig,
         recentTopics: List<ConversationTopic>
     ): MemeTemplate {
+        // Ensure we have phrases to work with
+        if (topPhrases.isEmpty()) {
+            throw IllegalStateException("Cannot generate template with empty phrase list")
+        }
+        
         val selectedPhrase = topPhrases[random.nextInt(topPhrases.size)]
         
         // Detect meme-worthy constructs
@@ -179,10 +198,10 @@ class MemeGenerator(
             speakerStyle?.name ?: "casual",
             selectedPhrase.phrase
         )
-        val emojiReferences = if (emojiPackResult is Result.Success) {
-            emojiPackResult.data.take(random.nextInt(2, 4))
-        } else {
-            listOf("😊", "✨")
+        val emojiReferences = when (emojiPackResult) {
+            is Result.Success -> emojiPackResult.data.take(random.nextInt(2, 4))
+            is Result.Error -> listOf("😊", "✨")
+            is Result.Loading -> listOf("😊", "✨")
         }
         
         // Generate sticker references
@@ -200,8 +219,16 @@ class MemeGenerator(
         )
     }
     
+    private fun defaultPhraseStats(): List<PhraseStatEntity> {
+        return listOf(
+            PhraseStatEntity("hey there", 10, listOf("👋")),
+            PhraseStatEntity("what's up", 8, listOf("😎")),
+            PhraseStatEntity("can't even", 6, listOf("😂"))
+        )
+    }
+    
     private fun detectRepetition(phrase: String): Boolean {
-        val words = phrase.lowercase().split("\\s+".toRegex())
+        val words = phrase.lowercase().split(WHITESPACE_REGEX)
         val wordCounts = words.groupingBy { it }.eachCount()
         return wordCounts.any { it.value > 1 }
     }

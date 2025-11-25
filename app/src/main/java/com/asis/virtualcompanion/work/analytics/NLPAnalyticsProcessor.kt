@@ -156,12 +156,14 @@ class NLPAnalyticsProcessor {
         
         for (message in messages) {
             // Sender statistics
-            senderStats.getOrPut(message.sender) {
+            val currentStats = senderStats.getOrPut(message.sender) {
                 SenderStats(sender = message.sender, messageCount = 0, wordCount = 0)
-            }.apply {
-                messageCount++
-                wordCount += message.text.split(Regex("\\s+")).size
             }
+            val wordCountIncrement = message.text.split(Regex("\\s+")).size
+            senderStats[message.sender] = currentStats.copy(
+                messageCount = currentStats.messageCount + 1,
+                wordCount = currentStats.wordCount + wordCountIncrement
+            )
             
             // Time-based patterns
             val calendar = Calendar.getInstance()

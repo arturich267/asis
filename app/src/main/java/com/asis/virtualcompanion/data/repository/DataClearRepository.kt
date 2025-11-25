@@ -17,9 +17,7 @@ import java.io.File
  */
 class DataClearRepository(private val context: Context) {
 
-    private val dataStore: DataStore<Preferences> by lazy {
-        preferencesDataStore(name = "data_clear_preferences")(context)
-    }
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "data_clear_preferences")
 
     /**
      * Deletes all data from Room database tables

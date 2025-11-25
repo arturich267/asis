@@ -119,14 +119,17 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 
                 val insertResult = chatMessageRepository.insertChatMessage(companionMessage)
                 
-                if (insertResult is Result.Success) {
-                    _sendMessageState.value = SendMessageState(isSending = false)
-                    _scrollToBottom.value = Unit
-                } else {
-                    _sendMessageState.value = SendMessageState(
-                        isSending = false,
-                        error = "Failed to save response"
-                    )
+                when (insertResult) {
+                    is Result.Success -> {
+                        _sendMessageState.value = SendMessageState(isSending = false)
+                        _scrollToBottom.value = Unit
+                    }
+                    is Result.Error -> {
+                        _sendMessageState.value = SendMessageState(
+                            isSending = false,
+                            error = "Failed to save response"
+                        )
+                    }
                 }
             }
             is Result.Error -> {

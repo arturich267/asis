@@ -5,7 +5,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
 import java.io.File
 
 class FFmpegAudioServiceTest {
@@ -18,6 +17,17 @@ class FFmpegAudioServiceTest {
     }
 
     @Test
+    fun `trimAudio should fail with stubbed service message`() = runBlocking {
+        val inputFile = File("nonexistent.wav")
+        val outputFile = File("output.wav")
+
+        val result = service.trimAudio(inputFile, outputFile, 0, 5000)
+
+        assertTrue(result is Result.Error)
+        assertTrue((result as Result.Error).exception.message?.contains("stubbed") == true)
+    }
+
+    @Test
     fun `trimAudio should fail when input file does not exist`() = runBlocking {
         val inputFile = File("nonexistent.wav")
         val outputFile = File("output.wav")
@@ -25,6 +35,18 @@ class FFmpegAudioServiceTest {
         val result = service.trimAudio(inputFile, outputFile, 0, 5000)
 
         assertTrue(result is Result.Error)
+    }
+
+    @Test
+    fun `mixAudio should fail with stubbed service message`() = runBlocking {
+        val input1 = File("nonexistent1.wav")
+        val input2 = File("nonexistent2.wav")
+        val output = File("output.wav")
+
+        val result = service.mixAudio(input1, input2, output, 0.5f)
+
+        assertTrue(result is Result.Error)
+        assertTrue((result as Result.Error).exception.message?.contains("stubbed") == true)
     }
 
     @Test
@@ -62,6 +84,22 @@ class FFmpegAudioServiceTest {
     }
 
     @Test
+    fun `concatenateAudio should fail with stubbed service message when files exist`() = runBlocking {
+        val tempFile = File.createTempFile("test", ".wav")
+        try {
+            val files = listOf(tempFile)
+            val outputFile = File("output.wav")
+
+            val result = service.concatenateAudio(files, outputFile)
+
+            assertTrue(result is Result.Error)
+            assertTrue((result as Result.Error).exception.message?.contains("stubbed") == true)
+        } finally {
+            tempFile.delete()
+        }
+    }
+
+    @Test
     fun `convertAudio should fail when input file does not exist`() = runBlocking {
         val inputFile = File("nonexistent.mp3")
         val outputFile = File("output.wav")
@@ -72,11 +110,39 @@ class FFmpegAudioServiceTest {
     }
 
     @Test
+    fun `convertAudio should fail with stubbed service message when file exists`() = runBlocking {
+        val tempFile = File.createTempFile("test", ".mp3")
+        try {
+            val outputFile = File("output.wav")
+
+            val result = service.convertAudio(tempFile, outputFile)
+
+            assertTrue(result is Result.Error)
+            assertTrue((result as Result.Error).exception.message?.contains("stubbed") == true)
+        } finally {
+            tempFile.delete()
+        }
+    }
+
+    @Test
     fun `getAudioDuration should fail when file does not exist`() = runBlocking {
         val file = File("nonexistent.wav")
 
         val result = service.getAudioDuration(file)
 
         assertTrue(result is Result.Error)
+    }
+
+    @Test
+    fun `getAudioDuration should fail with stubbed service message when file exists`() = runBlocking {
+        val tempFile = File.createTempFile("test", ".wav")
+        try {
+            val result = service.getAudioDuration(tempFile)
+
+            assertTrue(result is Result.Error)
+            assertTrue((result as Result.Error).exception.message?.contains("stubbed") == true)
+        } finally {
+            tempFile.delete()
+        }
     }
 }

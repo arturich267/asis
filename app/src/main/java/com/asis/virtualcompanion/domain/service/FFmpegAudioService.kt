@@ -1,13 +1,29 @@
 package com.asis.virtualcompanion.domain.service
 
 import android.util.Log
-import com.arthenica.ffmpegkit.FFmpegKit
-import com.arthenica.ffmpegkit.ReturnCode
 import com.asis.virtualcompanion.common.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
+/**
+ * Stubbed FFmpeg Audio Service - Advanced FFmpeg processing is currently disabled.
+ * 
+ * This class provides lightweight fallback implementations for audio processing operations.
+ * FFmpeg Kit integration (com.arthenica:ffmpeg-kit-min) has been removed to keep the build lean.
+ * 
+ * To restore full FFmpeg functionality:
+ * 1. Uncomment the implementation("com.arthenica:ffmpeg-kit-min:6.0") dependency in app/build.gradle.kts
+ * 2. Restore FFmpeg imports and replace stub implementations with actual FFmpeg commands
+ * 3. Test audio processing operations
+ * 
+ * Current limitations:
+ * - trimAudio: Returns Result.Error (not implemented)
+ * - mixAudio: Returns Result.Error (not implemented)
+ * - concatenateAudio: Returns Result.Error (not implemented)
+ * - convertAudio: Returns Result.Error (not implemented)
+ * - getAudioDuration: Returns Result.Error (not implemented)
+ */
 class FFmpegAudioService {
     
     companion object {
@@ -25,28 +41,8 @@ class FFmpegAudioService {
                 return@withContext Result.Error(IllegalArgumentException("Input file does not exist"))
             }
             
-            val startSeconds = startTimeMs / 1000.0
-            val durationSeconds = durationMs / 1000.0
-            
-            val command = "-i \"${inputFile.absolutePath}\" " +
-                    "-ss $startSeconds " +
-                    "-t $durationSeconds " +
-                    "-c copy \"${outputFile.absolutePath}\""
-            
-            val session = FFmpegKit.execute(command)
-            val returnCode = session.returnCode
-            
-            if (ReturnCode.isSuccess(returnCode)) {
-                if (outputFile.exists()) {
-                    Result.Success(outputFile)
-                } else {
-                    Result.Error(IllegalStateException("Output file was not created"))
-                }
-            } else {
-                val error = session.failStackTrace ?: "Unknown error"
-                Log.e(TAG, "FFmpeg trim failed: $error")
-                Result.Error(IllegalStateException("FFmpeg trim failed: $error"))
-            }
+            Log.w(TAG, "trimAudio is not available in stubbed service. Enable FFmpeg Kit to use this feature.")
+            Result.Error(IllegalStateException("Audio trimming is not available (FFmpeg service is stubbed)"))
         } catch (e: Exception) {
             Result.Error(e)
         }
@@ -63,28 +59,8 @@ class FFmpegAudioService {
                 return@withContext Result.Error(IllegalArgumentException("Input files do not exist"))
             }
             
-            val volume1 = mixRatio
-            val volume2 = 1.0f - mixRatio
-            
-            val command = "-i \"${input1File.absolutePath}\" " +
-                    "-i \"${input2File.absolutePath}\" " +
-                    "-filter_complex \"[0:a]volume=$volume1[a1];[1:a]volume=$volume2[a2];[a1][a2]amix=inputs=2:duration=longest\" " +
-                    "-c:a aac -b:a 192k \"${outputFile.absolutePath}\""
-            
-            val session = FFmpegKit.execute(command)
-            val returnCode = session.returnCode
-            
-            if (ReturnCode.isSuccess(returnCode)) {
-                if (outputFile.exists()) {
-                    Result.Success(outputFile)
-                } else {
-                    Result.Error(IllegalStateException("Output file was not created"))
-                }
-            } else {
-                val error = session.failStackTrace ?: "Unknown error"
-                Log.e(TAG, "FFmpeg mix failed: $error")
-                Result.Error(IllegalStateException("FFmpeg mix failed: $error"))
-            }
+            Log.w(TAG, "mixAudio is not available in stubbed service. Enable FFmpeg Kit to use this feature.")
+            Result.Error(IllegalStateException("Audio mixing is not available (FFmpeg service is stubbed)"))
         } catch (e: Exception) {
             Result.Error(e)
         }
@@ -103,28 +79,8 @@ class FFmpegAudioService {
                 return@withContext Result.Error(IllegalArgumentException("Some input files do not exist"))
             }
             
-            val concatListFile = File(outputFile.parent, "concat_list_${System.currentTimeMillis()}.txt")
-            concatListFile.writeText(inputFiles.joinToString("\n") { "file '${it.absolutePath}'" })
-            
-            val command = "-f concat -safe 0 -i \"${concatListFile.absolutePath}\" " +
-                    "-c copy \"${outputFile.absolutePath}\""
-            
-            val session = FFmpegKit.execute(command)
-            val returnCode = session.returnCode
-            
-            concatListFile.delete()
-            
-            if (ReturnCode.isSuccess(returnCode)) {
-                if (outputFile.exists()) {
-                    Result.Success(outputFile)
-                } else {
-                    Result.Error(IllegalStateException("Output file was not created"))
-                }
-            } else {
-                val error = session.failStackTrace ?: "Unknown error"
-                Log.e(TAG, "FFmpeg concatenate failed: $error")
-                Result.Error(IllegalStateException("FFmpeg concatenate failed: $error"))
-            }
+            Log.w(TAG, "concatenateAudio is not available in stubbed service. Enable FFmpeg Kit to use this feature.")
+            Result.Error(IllegalStateException("Audio concatenation is not available (FFmpeg service is stubbed)"))
         } catch (e: Exception) {
             Result.Error(e)
         }
@@ -142,25 +98,8 @@ class FFmpegAudioService {
                 return@withContext Result.Error(IllegalArgumentException("Input file does not exist"))
             }
             
-            val command = "-i \"${inputFile.absolutePath}\" " +
-                    "-ar $sampleRate " +
-                    "-ac $channels " +
-                    "-f $outputFormat \"${outputFile.absolutePath}\""
-            
-            val session = FFmpegKit.execute(command)
-            val returnCode = session.returnCode
-            
-            if (ReturnCode.isSuccess(returnCode)) {
-                if (outputFile.exists()) {
-                    Result.Success(outputFile)
-                } else {
-                    Result.Error(IllegalStateException("Output file was not created"))
-                }
-            } else {
-                val error = session.failStackTrace ?: "Unknown error"
-                Log.e(TAG, "FFmpeg convert failed: $error")
-                Result.Error(IllegalStateException("FFmpeg convert failed: $error"))
-            }
+            Log.w(TAG, "convertAudio is not available in stubbed service. Enable FFmpeg Kit to use this feature.")
+            Result.Error(IllegalStateException("Audio conversion is not available (FFmpeg service is stubbed)"))
         } catch (e: Exception) {
             Result.Error(e)
         }
@@ -172,16 +111,8 @@ class FFmpegAudioService {
                 return@withContext Result.Error(IllegalArgumentException("File does not exist"))
             }
             
-            val command = "-i \"${file.absolutePath}\" -show_entries format=duration -v quiet -of csv=p=0"
-            val session = FFmpegKit.execute(command)
-            
-            if (ReturnCode.isSuccess(session.returnCode)) {
-                val output = session.output?.trim()
-                val durationSeconds = output?.toDoubleOrNull() ?: 0.0
-                Result.Success((durationSeconds * 1000).toLong())
-            } else {
-                Result.Error(IllegalStateException("Failed to get audio duration"))
-            }
+            Log.w(TAG, "getAudioDuration is not available in stubbed service. Enable FFmpeg Kit to use this feature.")
+            Result.Error(IllegalStateException("Getting audio duration is not available (FFmpeg service is stubbed)"))
         } catch (e: Exception) {
             Result.Error(e)
         }

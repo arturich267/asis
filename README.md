@@ -194,7 +194,7 @@ For detailed build instructions, see [RELEASE.md](RELEASE.md)
 
 ### AI & Media
 - TensorFlow Lite 2.14.0
-- FFmpeg Kit 6.0-2
+- FFmpeg Kit 6.0-2 (optional - currently stubbed)
 
 ### Storage
 - DataStore Preferences 1.0.0
@@ -207,6 +207,44 @@ For detailed build instructions, see [RELEASE.md](RELEASE.md)
 - Robolectric 4.11.1
 
 For complete dependency list, see [build.gradle.kts](app/build.gradle.kts)
+
+---
+
+## 🔧 FFmpeg Audio Service (Stubbed)
+
+The FFmpeg audio service is currently **disabled and stubbed** to keep the build lean. The service provides APIs for:
+- **trimAudio** - Trim audio to a specific duration
+- **mixAudio** - Mix multiple audio tracks
+- **concatenateAudio** - Concatenate multiple audio files
+- **convertAudio** - Convert audio format and sample rate
+- **getAudioDuration** - Get audio file duration
+
+### Status
+All methods currently return `Result.Error` with a descriptive message indicating the service is not available.
+
+### Enabling FFmpeg Support
+
+To restore full FFmpeg functionality:
+
+1. **Uncomment the dependency** in `app/build.gradle.kts`:
+   ```gradle
+   implementation("com.arthenica:ffmpeg-kit-min:6.0")
+   ```
+
+2. **Restore FFmpeg imports** in `app/src/main/java/com/asis/virtualcompanion/domain/service/FFmpegAudioService.kt`:
+   ```kotlin
+   import com.arthenica.ffmpegkit.FFmpegKit
+   import com.arthenica.ffmpegkit.ReturnCode
+   ```
+
+3. **Replace stub implementations** with actual FFmpeg commands
+
+4. **Rebuild the project**:
+   ```bash
+   ./gradlew clean assembleDebug
+   ```
+
+See [FFmpegAudioService.kt](app/src/main/java/com/asis/virtualcompanion/domain/service/FFmpegAudioService.kt) for detailed instructions.
 
 ---
 

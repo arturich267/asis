@@ -113,9 +113,10 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     
-    // FFmpeg Kit - Optional audio processing library
+    // FFmpeg Kit - Optional audio processing library (STUBBED - service is disabled)
     // Uncomment if needed for advanced audio features
-    implementation("com.arthenica:ffmpeg-kit-min:6.0")
+    // To enable: Uncomment below and restore FFmpeg imports/calls in FFmpegAudioService.kt
+    // implementation("com.arthenica:ffmpeg-kit-min:6.0")
     
     // Gson for JSON serialization
     implementation("com.google.code.gson:gson:2.10.1")

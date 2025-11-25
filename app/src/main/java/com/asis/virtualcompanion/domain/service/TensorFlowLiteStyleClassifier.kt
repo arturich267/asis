@@ -20,6 +20,18 @@ class TensorFlowLiteStyleClassifier(
     private var interpreter: Interpreter? = null
     private val labels = listOf("casual", "energetic", "sarcastic", "friendly", "formal", "playful", "serious")
     private val random = Random()
+
+    /** Keywords that signal high-energy, joke-heavy banter when the ML model is unavailable. */
+    private val playfulTokens = listOf("lol", "lmao", "haha")
+
+    /** Keywords that suggest the user wants a precise, matter-of-fact response. */
+    private val seriousTokens = listOf("really", "seriously", "actually")
+
+    /** Expressions that usually correlate with high-energy reactions. */
+    private val energeticTokens = listOf("wow", "omg", "amazing")
+
+    /** Slang commonly used in casual chitchat. */
+    private val casualTokens = listOf("bro", "dude", "man")
     
     companion object {
         private const val MODEL_FILE = "meme_style_classifier.tflite"
@@ -76,20 +88,28 @@ class TensorFlowLiteStyleClassifier(
         detectedEmotion: String?,
         currentContext: Map<String, Any>
     ): String {
-        val text = inputText.lowercase()
+        val normalizedText = inputText.lowercase(Locale.ROOT)
+        val normalizedEmotion = detectedEmotion?.lowercase(Locale.ROOT)
         
         // Simple rule-based classification as fallback
         return when {
-            detectedEmotion?.lowercase() in listOf("happy", "excited", "joyful") -> "energetic"
-            detectedEmotion?.lowercase() in listOf("sad", "down", "blue") -> "friendly"
-            text.contains("?") && text.length < 50 -> "casual"
-            text.contains("lol", "lmao", "haha") -> "playful"
-            text.contains("really", "seriously", "actually") -> "serious"
-            text.contains("wow", "omg", "amazing") -> "energetic"
-            text.length > 100 -> "formal"
-            text.contains("bro", "dude", "man") -> "casual"
+            normalizedEmotion in listOf("happy", "excited", "joyful") -> "energetic"
+            normalizedEmotion in listOf("sad", "down", "blue") -> "friendly"
+            normalizedText.contains("?") && normalizedText.length < 50 -> "casual"
+            normalizedText.containsAnyKeyword(playfulTokens) -> "playful"
+            normalizedText.containsAnyKeyword(seriousTokens) -> "serious"
+            normalizedText.containsAnyKeyword(energeticTokens) -> "energetic"
+            normalizedText.length > 100 -> "formal"
+            normalizedText.containsAnyKeyword(casualTokens) -> "casual"
             else -> labels[random.nextInt(labels.size)]
         }
+    }
+    
+    /**
+     * Helper that mirrors the previous multi-argument contains checks without relying on invalid overloads.
+     */
+    private fun String.containsAnyKeyword(keywords: List<String>): Boolean {
+        return keywords.any { keyword -> this.contains(keyword, ignoreCase = true) }
     }
     
     private fun preprocessInput(

@@ -212,7 +212,7 @@ class WhatsAppChatParser {
             matcher.group(1)
         } else {
             val lines = content.split("\n")
-            lines.firstOrNull { it.startsWith(">") }?.substring(1).trim()
+            lines.firstOrNull { it.startsWith(">") }?.substring(1)?.trim()
         }
     }
     
@@ -230,8 +230,8 @@ class WhatsAppChatParser {
         val durationPattern = Pattern.compile("""\((\d+):(\d+)\)""")
         val matcher = durationPattern.matcher(content)
         return if (matcher.find()) {
-            val minutes = matcher.group(1).toLong()
-            val seconds = matcher.group(2).toLong()
+            val minutes = matcher.group(1)?.toLongOrNull() ?: 0L
+            val seconds = matcher.group(2)?.toLongOrNull() ?: 0L
             (minutes * 60 + seconds) * 1000 // Convert to milliseconds
         } else null
     }

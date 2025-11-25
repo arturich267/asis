@@ -115,7 +115,7 @@ dependencies {
     
     // FFmpeg Kit - Optional audio processing library
     // Uncomment if needed for advanced audio features
-    // implementation("com.arthenica:ffmpeg-kit-min:6.0")
+    implementation("com.arthenica:ffmpeg-kit-min:6.0")
     
     // Gson for JSON serialization
     implementation("com.google.code.gson:gson:2.10.1")

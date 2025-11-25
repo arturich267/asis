@@ -64,7 +64,7 @@ class ArchiveExtractor(private val context: Context) {
                 entry = zipInputStream.nextEntry
             }
             
-            ArchiveExtractionResult(
+            return ArchiveExtractionResult(
                 success = true,
                 chatFile = chatFile,
                 mediaFiles = mediaFiles,
@@ -73,7 +73,7 @@ class ArchiveExtractor(private val context: Context) {
             )
             
         } catch (e: Exception) {
-            ArchiveExtractionResult(
+            return ArchiveExtractionResult(
                 success = false,
                 error = e.message ?: "Error during ZIP extraction"
             )

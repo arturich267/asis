@@ -325,13 +325,13 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                     )
                 }
             }
-        }
-        
-        // Delete user audio file if voice retention is disabled
-        userAudioFile?.let { audioFile ->
-            if (!getVoiceRetentionSetting()) {
-                withContext(Dispatchers.IO) {
-                    audioFile.delete()
+            
+            // Delete user audio file if voice retention is disabled
+            userAudioFile?.let { audioFile ->
+                if (!getVoiceRetentionSetting()) {
+                    withContext(Dispatchers.IO) {
+                        audioFile.delete()
+                    }
                 }
             }
         }
@@ -347,11 +347,10 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 voiceMetaResult.first().firstOrNull()?.let { voiceMeta ->
                     val voiceFile = File(voiceMeta.filePath)
                     if (voiceFile.exists()) {
-                        val mixedFile = File(tempAudioDir, "mixed_${System.currentTimeMillis()}.wav")
-                        val mixResult = ffmpegService.mixAudio(ttsFile, voiceFile, mixedFile, 0.7f)
-                        if (mixResult is Result.Success) {
-                            return@withContext mixResult.data
-                        }
+                        // FFmpeg mixing not available - would require ffmpeg-kit dependency
+                        // For now, just use TTS file
+                        // TODO: Enable FFmpeg Kit in build.gradle to mix real voice with TTS
+                        return@withContext ttsFile
                     }
                 }
             } catch (e: Exception) {

@@ -21,7 +21,7 @@ class MemeGenerator(
     private val styleClassifier: TensorFlowLiteStyleClassifier
 ) {
     
-    private val random = Random(System.currentTimeMillis())
+    private var random = Random(System.currentTimeMillis())
     
     suspend fun generateMemeResponse(
         config: MemeGenerationConfig
@@ -29,9 +29,7 @@ class MemeGenerator(
         try {
             // Set seed for reproducible randomness if provided
             config.seed?.let { seed ->
-                Random(seed).asJavaRandom().let { javaRandom ->
-                    this@MemeGenerator.random = Random(seed)
-                }
+                random = Random(seed)
             }
             
             // Get top phrases
@@ -104,9 +102,18 @@ class MemeGenerator(
     private suspend fun selectRandomStyle(): String {
         val stylesResult = speakerStyleRepository.getAllSpeakerStyles()
         val styles = if (stylesResult is Result.Success) {
-            stylesResult.value
+            stylesResult.data
         } else {
-            listOf("casual", "energetic", "playful", "friendly")
+            listOf("casual", "energetic", "playful", "friendly").map { 
+                SpeakerStyle(
+                    id = it,
+                    name = it,
+                    characteristics = listOf(it),
+                    emojiPreferences = emptyList(),
+                    slangTerms = emptyList(),
+                    repetitionPatterns = emptyList()
+                )
+            }
         }
         return styles[random.nextInt(styles.size)].name
     }

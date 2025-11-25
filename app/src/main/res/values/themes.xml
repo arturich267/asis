@@ -22,5 +22,5 @@
         <item name="windowNoTitle">true</item>
     </style>
     
-    <style name="Theme_AsisVirtualCompanion" parent="Theme.AsisVirtualCompanion" />
+    <style name="Theme.AsisVirtualCompanion.Alt" parent="Theme.AsisVirtualCompanion" />
 </resources>

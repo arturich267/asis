@@ -21,28 +21,28 @@ class ThemeRepository(
             name = "Default",
             backgroundRes = R.drawable.bg_home_default,
             primaryColorRes = R.color.primary,
-            buttonStyleRes = R.style.Theme_AsisVirtualCompanion
+            buttonStyleRes = R.style.Theme_AsisVirtualCompanion_Alt
         ),
         Theme(
             id = "ocean",
             name = "Ocean",
             backgroundRes = R.drawable.bg_home_default,
             primaryColorRes = R.color.primary,
-            buttonStyleRes = R.style.Theme_AsisVirtualCompanion
+            buttonStyleRes = R.style.Theme_AsisVirtualCompanion_Alt
         ),
         Theme(
             id = "forest",
             name = "Forest",
             backgroundRes = R.drawable.bg_home_default,
             primaryColorRes = R.color.primary,
-            buttonStyleRes = R.style.Theme_AsisVirtualCompanion
+            buttonStyleRes = R.style.Theme_AsisVirtualCompanion_Alt
         ),
         Theme(
             id = "sunset",
             name = "Sunset",
             backgroundRes = R.drawable.bg_home_default,
             primaryColorRes = R.color.primary,
-            buttonStyleRes = R.style.Theme_AsisVirtualCompanion
+            buttonStyleRes = R.style.Theme_AsisVirtualCompanion_Alt
         )
     )
 

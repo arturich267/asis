@@ -7,11 +7,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asis.virtualcompanion.R
 import com.asis.virtualcompanion.data.preferences.PermissionsPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -120,10 +122,18 @@ class PermissionsViewModel(
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.READ_MEDIA_VIDEO,
                 Manifest.permission.ACCESS_MEDIA_LOCATION -> {
-                    RationaleInfo(permission, "Media Access", "This app needs to access your media files to import WhatsApp archives.")
+                    RationaleInfo(
+                        permission,
+                        R.string.permissions_media_location_title,
+                        R.string.permissions_media_location_description
+                    )
                 }
                 Manifest.permission.RECORD_AUDIO -> {
-                    RationaleInfo(permission, "Audio Recording", "This app needs to record audio for voice features.")
+                    RationaleInfo(
+                        permission,
+                        R.string.permissions_audio_title,
+                        R.string.permissions_audio_description
+                    )
                 }
                 else -> null
             }
@@ -182,7 +192,7 @@ class PermissionsViewModel(
 
     data class RationaleInfo(
         val permission: String,
-        val title: String,
-        val description: String
+        @StringRes val titleResId: Int,
+        @StringRes val descriptionResId: Int
     )
 }

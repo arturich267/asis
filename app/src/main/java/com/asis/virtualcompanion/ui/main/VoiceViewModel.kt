@@ -1,10 +1,12 @@
 package com.asis.virtualcompanion.ui.main
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.asis.virtualcompanion.R
 import com.asis.virtualcompanion.common.Result
 import com.asis.virtualcompanion.data.model.*
 import com.asis.virtualcompanion.data.preferences.VoiceInteractionPreferences
@@ -35,6 +37,7 @@ data class VoiceUiState(
 
 class VoiceViewModel(application: Application) : AndroidViewModel(application) {
     
+    private val context = application
     private val _uiState = MutableLiveData<VoiceUiState>()
     val uiState: LiveData<VoiceUiState> = _uiState
     
@@ -52,6 +55,11 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
     private var recordingFile: File? = null
     private var amplitudeJob: Job? = null
     private var playbackJob: Job? = null
+    
+    private fun formatErrorMessage(@StringRes resId: Int, detail: String?): String {
+        val reason = detail?.takeIf { it.isNotBlank() } ?: context.getString(R.string.error_unknown_reason)
+        return context.getString(resId, reason)
+    }
     
     init {
         _uiState.value = VoiceUiState()
@@ -121,12 +129,12 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                     startAmplitudeMonitoring()
                 } else if (result is Result.Error) {
                     updateState {
-                        copy(errorMessage = "Failed to start recording: ${result.exception.message}")
+                        copy(errorMessage = formatErrorMessage(R.string.voice_error_start_recording, result.exception?.message))
                     }
                 }
             } catch (e: Exception) {
                 updateState {
-                    copy(errorMessage = "Failed to start recording: ${e.message}")
+                    copy(errorMessage = formatErrorMessage(R.string.voice_error_start_recording, e.message))
                 }
             }
         }
@@ -169,7 +177,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 processRecordedAudio()
             } else if (result is Result.Error) {
                 updateState {
-                    copy(errorMessage = "Failed to stop recording: ${result.exception.message}")
+                    copy(errorMessage = formatErrorMessage(R.string.voice_error_stop_recording, result.exception?.message))
                 }
             }
         }
@@ -180,7 +188,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
             updateState {
                 copy(
                     isProcessing = true,
-                    processingMessage = "Converting audio...",
+                    processingMessage = context.getString(R.string.voice_processing_converting_audio),
                     errorMessage = null
                 )
             }
@@ -189,7 +197,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 updateState {
                     copy(
                         isProcessing = false,
-                        errorMessage = "No recording file found"
+                        errorMessage = context.getString(R.string.voice_error_missing_recording)
                     )
                 }
                 return@launch
@@ -202,7 +210,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 updateState {
                     copy(
                         isProcessing = false,
-                        errorMessage = "Failed to convert audio: ${convertResult.exception.message}"
+                        errorMessage = formatErrorMessage(R.string.voice_error_convert_audio, convertResult.exception?.message)
                     )
                 }
                 return@launch
@@ -215,7 +223,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
     private fun analyzeEmotionAndGenerateResponse(audioFile: File) {
         viewModelScope.launch {
             updateState {
-                copy(processingMessage = "Analyzing emotion...")
+                copy(processingMessage = context.getString(R.string.voice_processing_analyzing_emotion))
             }
             
             val emotionResult = emotionAnalysisService.analyzeAudio(audioFile)
@@ -227,7 +235,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
             }
             
             updateState {
-                copy(processingMessage = "Generating meme response...")
+                copy(processingMessage = context.getString(R.string.voice_processing_generating_response))
             }
             
             val mode = _uiState.value?.interactionMode ?: VoiceInteractionMode.RANDOM_MEME
@@ -248,7 +256,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 updateState {
                     copy(
                         isProcessing = false,
-                        errorMessage = "Failed to generate response: ${memeResult.exception.message}"
+                        errorMessage = formatErrorMessage(R.string.voice_error_generate_response, memeResult.exception?.message)
                     )
                 }
                 // Delete user audio file if voice retention is disabled
@@ -262,7 +270,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
             
             updateState {
                 copy(
-                    processingMessage = "Synthesizing speech...",
+                    processingMessage = context.getString(R.string.voice_processing_synthesizing_speech),
                     lastMemeResponse = memeResponse
                 )
             }
@@ -283,7 +291,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                 updateState {
                     copy(
                         isProcessing = false,
-                        errorMessage = "Failed to synthesize speech: ${ttsResult.exception.message}"
+                        errorMessage = formatErrorMessage(R.string.voice_error_synthesize_speech, ttsResult.exception?.message)
                     )
                 }
                 return@launch
@@ -320,7 +328,7 @@ class VoiceViewModel(application: Application) : AndroidViewModel(application) {
                     copy(
                         playbackInfo = AudioPlaybackInfo(
                             state = AudioPlaybackState.ERROR,
-                            error = "Failed to prepare audio for playback"
+                            error = context.getString(R.string.voice_error_prepare_audio)
                         )
                     )
                 }

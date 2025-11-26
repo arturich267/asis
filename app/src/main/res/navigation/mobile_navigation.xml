@@ -56,13 +56,13 @@
     <fragment
         android:id="@+id/navigation_voice"
         android:name="com.asis.virtualcompanion.ui.main.VoiceFragment"
-        android:label="Voice Interaction"
+        android:label="@string/title_voice"
         tools:layout="@layout/fragment_voice" />
 
     <fragment
         android:id="@+id/navigation_chat"
         android:name="com.asis.virtualcompanion.ui.main.ChatFragment"
-        android:label="Chat"
+        android:label="@string/chat_title"
         tools:layout="@layout/fragment_chat" />
 
     <fragment

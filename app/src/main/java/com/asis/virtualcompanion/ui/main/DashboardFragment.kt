@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.asis.virtualcompanion.R
 import com.asis.virtualcompanion.databinding.FragmentDashboardBinding
 
 /**
@@ -30,7 +31,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun setupUI() {
-        binding.textDashboard.text = "Dashboard placeholder"
+        binding.textDashboard.text = getString(R.string.dashboard_placeholder_text)
     }
 
     override fun onDestroyView() {

@@ -93,7 +93,7 @@ class PermissionsFragment : Fragment() {
 
     private fun showRationaleDialog(rationaleData: PermissionsViewModel.RationaleDialogData) {
         val message = rationaleData.rationales.joinToString("\n\n") { rationale ->
-            "${rationale.title}: ${rationale.description}"
+            "${getString(rationale.titleResId)}: ${getString(rationale.descriptionResId)}"
         }
 
         AlertDialog.Builder(requireContext())

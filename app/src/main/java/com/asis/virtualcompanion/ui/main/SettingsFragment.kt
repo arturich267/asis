@@ -117,13 +117,17 @@ class SettingsFragment : Fragment() {
         }
 
         binding.archiveStatusText.text = state.archiveUri?.let { uri ->
-            "Archive selected: ${Uri.parse(uri).lastPathSegment}"
-        } ?: "No archive selected"
+            val fileName = Uri.parse(uri).lastPathSegment ?: ""
+            getString(R.string.settings_archive_selected, fileName)
+        } ?: getString(R.string.settings_no_archive_selected)
 
         if (state.archiveParsingInProgress) {
             binding.parsingProgressBar.visibility = View.VISIBLE
             binding.parsingProgressBar.progress = state.archiveParsingProgress
-            binding.parsingStatusText.text = "Parsing archive... ${state.archiveParsingProgress}%"
+            binding.parsingStatusText.text = getString(
+                R.string.settings_parsing_archive_progress,
+                state.archiveParsingProgress
+            )
             binding.parsingStatusText.visibility = View.VISIBLE
         } else {
             binding.parsingProgressBar.visibility = View.GONE

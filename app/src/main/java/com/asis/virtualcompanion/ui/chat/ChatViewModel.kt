@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.asis.virtualcompanion.AsisApplication
+import com.asis.virtualcompanion.R
 import com.asis.virtualcompanion.common.Result
 import com.asis.virtualcompanion.data.database.entity.ChatMessageEntity
 import com.asis.virtualcompanion.data.model.MemeGenerationConfig
@@ -30,6 +31,7 @@ data class SendMessageState(
 
 class ChatViewModel(application: Application) : AndroidViewModel(application) {
     
+    private val context = getApplication<Application>()
     private val chatMessageRepository: ChatMessageRepository = 
         AppModule.provideChatMessageRepository(application)
     
@@ -55,7 +57,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             
             chatMessageRepository.getAllChatMessages()
                 .catch { e ->
-                    _uiState.value = ChatUiState.Error(e.message ?: "Failed to load messages")
+                    val errorMessage = e.message ?: context.getString(R.string.chat_error_loading)
+                    _uiState.value = ChatUiState.Error(errorMessage)
                 }
                 .collect { messages ->
                     _uiState.value = ChatUiState.Success(messages)
@@ -81,7 +84,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             if (insertResult is Result.Error) {
                 _sendMessageState.value = SendMessageState(
                     isSending = false,
-                    error = "Failed to send message"
+                    error = context.getString(R.string.chat_error_sending)
                 )
                 return@launch
             }
@@ -127,7 +130,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     is Result.Error -> {
                         _sendMessageState.value = SendMessageState(
                             isSending = false,
-                            error = "Failed to save response"
+                            error = context.getString(R.string.chat_error_saving_response)
                         )
                     }
                 }
@@ -135,7 +138,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             is Result.Error -> {
                 _sendMessageState.value = SendMessageState(
                     isSending = false,
-                    error = "Failed to generate response"
+                    error = context.getString(R.string.chat_error_generating)
                 )
             }
         }

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+import com.asis.virtualcompanion.R
 import com.asis.virtualcompanion.data.model.Theme
 import com.asis.virtualcompanion.data.preferences.ThemePreferences
 import com.asis.virtualcompanion.data.repository.DataClearRepository
@@ -159,7 +160,11 @@ class SettingsViewModel(
                 )
             } catch (e: Exception) {
                 val currentState = _uiState.value ?: SettingsUiState()
-                _uiState.value = currentState.copy(error = "Failed to clear data: ${e.message}")
+                val errorMessage = context.getString(
+                    R.string.settings_error_clear_data,
+                    e.message ?: context.getString(R.string.error_unknown_reason)
+                )
+                _uiState.value = currentState.copy(error = errorMessage)
             }
         }
     }

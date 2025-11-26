@@ -15,7 +15,6 @@ import com.asis.virtualcompanion.R
 import com.asis.virtualcompanion.data.model.AudioPlaybackState
 import com.asis.virtualcompanion.data.model.VoiceInteractionMode
 import com.asis.virtualcompanion.databinding.FragmentVoiceBinding
-import java.util.Locale
 import kotlin.math.max
 import kotlin.math.min
 
@@ -83,8 +82,12 @@ class VoiceFragment : Fragment() {
         playbackSeekbarListener = object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    binding.playbackTimeText.text = formatDuration(progress) +
-                            " / " + formatDuration(seekBar?.max ?: 0)
+                    val maxValue = seekBar?.max ?: 0
+                    binding.playbackTimeText.text = getString(
+                        R.string.voice_playback_time_progress,
+                        formatDuration(progress),
+                        formatDuration(maxValue)
+                    )
                 }
             }
 
@@ -170,8 +173,11 @@ class VoiceFragment : Fragment() {
         val duration = max(playbackInfo.durationMs, 1)
         binding.playbackSeekBar.max = duration
         binding.playbackSeekBar.progress = min(playbackInfo.currentPositionMs, duration)
-        binding.playbackTimeText.text = formatDuration(playbackInfo.currentPositionMs) +
-                " / " + formatDuration(playbackInfo.durationMs)
+        binding.playbackTimeText.text = getString(
+            R.string.voice_playback_time_progress,
+            formatDuration(playbackInfo.currentPositionMs),
+            formatDuration(playbackInfo.durationMs)
+        )
 
         val isPlaying = playbackInfo.state == AudioPlaybackState.PLAYING
         binding.playPauseButton.text = if (isPlaying) {
@@ -194,7 +200,7 @@ class VoiceFragment : Fragment() {
         val totalSeconds = (durationMs / 1000).coerceAtLeast(0)
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
-        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        return getString(R.string.voice_duration_format, minutes, seconds)
     }
 
     override fun onDestroyView() {

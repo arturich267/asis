@@ -1,18 +1,17 @@
 package com.asis.virtualcompanion.ui.main
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.asis.virtualcompanion.R
-import kotlinx.coroutines.launch
 
 /**
  * Data class representing the home screen surface state
  */
 data class HomeSurfaceState(
     val currentBackgroundRes: Int = R.drawable.bg_home_default,
-    val lastProfileSummary: String = "No profile imported yet",
+    val lastProfileSummary: String = "",
     val isVoiceAvailable: Boolean = true,
     val isChatAvailable: Boolean = true
 )
@@ -20,24 +19,15 @@ data class HomeSurfaceState(
 /**
  * ViewModel for the Home screen managing surface state and interactions
  */
-class HomeViewModel : ViewModel() {
-    
-    private val _surfaceState = MutableLiveData<HomeSurfaceState>()
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val defaultProfileSummary = application.getString(R.string.home_last_profile_summary)
+
+    private val _surfaceState = MutableLiveData(
+        HomeSurfaceState(lastProfileSummary = defaultProfileSummary)
+    )
     val surfaceState: LiveData<HomeSurfaceState> = _surfaceState
-    
-    init {
-        loadInitialSurfaceState()
-    }
-    
-    /**
-     * Load initial surface state
-     */
-    private fun loadInitialSurfaceState() {
-        viewModelScope.launch {
-            _surfaceState.value = HomeSurfaceState()
-        }
-    }
-    
+
     /**
      * Update the background resource
      */
@@ -45,7 +35,7 @@ class HomeViewModel : ViewModel() {
         val currentState = _surfaceState.value ?: return
         _surfaceState.value = currentState.copy(currentBackgroundRes = backgroundRes)
     }
-    
+
     /**
      * Update the last profile summary
      */
@@ -53,7 +43,7 @@ class HomeViewModel : ViewModel() {
         val currentState = _surfaceState.value ?: return
         _surfaceState.value = currentState.copy(lastProfileSummary = summary)
     }
-    
+
     /**
      * Handle voice button click
      */
@@ -61,7 +51,7 @@ class HomeViewModel : ViewModel() {
         // Log analytics for voice interaction
         logAnalyticsEvent("voice_button_clicked")
     }
-    
+
     /**
      * Handle chat button click
      */
@@ -69,7 +59,7 @@ class HomeViewModel : ViewModel() {
         // Log analytics for chat interaction
         logAnalyticsEvent("chat_button_clicked")
     }
-    
+
     /**
      * Handle settings button click
      */
@@ -77,7 +67,7 @@ class HomeViewModel : ViewModel() {
         // Log analytics for settings interaction
         logAnalyticsEvent("settings_button_clicked")
     }
-    
+
     /**
      * Stub for analytics logging
      */

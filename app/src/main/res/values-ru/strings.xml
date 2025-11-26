@@ -1,0 +1,95 @@
+<resources>
+    <string name="app_name">Asis — виртуальный компаньон</string>
+    <string name="welcome_title">Добро пожаловать в Asis</string>
+    <string name="welcome_subtitle">Ваш виртуальный компаньон</string>
+    <string name="loading">Загрузка…</string>
+    <string name="error_occurred">Произошла ошибка</string>
+    <string name="retry">Повторить</string>
+    
+    <!-- Navigation titles -->
+    <string name="title_home">Главная</string>
+    <string name="title_dashboard">Панель</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_permissions">Разрешения</string>
+    
+    <!-- Permissions Screen -->
+    <string name="permissions_title">Требуются разрешения</string>
+    <string name="permissions_subtitle">Нам нужно ваше разрешение, чтобы получить доступ к основным функциям</string>
+    <string name="permissions_media_location_title">Доступ к медиа</string>
+    <string name="permissions_media_location_description">Нам нужен доступ к вашим медиафайлам, чтобы импортировать архивы WhatsApp и обрабатывать ваши данные</string>
+    <string name="permissions_audio_title">Запись звука</string>
+    <string name="permissions_audio_description">Нам необходимо записывать звук для голосовых функций приложения</string>
+    <string name="permissions_grant_button">Предоставить разрешения</string>
+    <string name="permissions_rationale_title">Требуется разрешение</string>
+    <string name="permissions_rationale_media">Этому приложению нужен доступ к вашим медиафайлам, чтобы импортировать архивы WhatsApp. Пожалуйста, предоставьте это разрешение.</string>
+    <string name="permissions_rationale_audio">Этому приложению необходимо записывать звук для голосовых функций. Пожалуйста, предоставьте это разрешение.</string>
+    <string name="permissions_denied_title">Разрешения отклонены</string>
+    <string name="permissions_denied_message">Некоторые разрешения были отклонены. Приложению нужны эти разрешения для корректной работы. Пожалуйста, включите их в настройках приложения.</string>
+    <string name="permissions_go_to_settings">Перейти в настройки</string>
+    <string name="permissions_cancel">Отмена</string>
+    
+    <!-- Home Screen -->
+    <string name="home_voice_button_content_description">Кнопка голосового взаимодействия</string>
+    <string name="home_chat_button_content_description">Кнопка взаимодействия в чате</string>
+    <string name="home_settings_button_content_description">Кнопка настроек</string>
+    <string name="home_welcome_title">Добро пожаловать в Asis</string>
+    <string name="home_welcome_subtitle">Ваш виртуальный компаньон</string>
+    <!-- Shown on Home when no WhatsApp profile has been imported -->
+    <string name="home_last_profile_summary">Профиль ещё не импортирован</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_archive_title">Импорт архива</string>
+    <string name="settings_select_archive">Выбрать архив</string>
+    <string name="settings_no_archive_selected">Архив не выбран</string>
+    <string name="settings_parsing_archive">Анализ архива…</string>
+    <string name="settings_theme_title">Оформление</string>
+    <string name="settings_theme_preview">Предпросмотр темы</string>
+    <string name="settings_preview_button">Кнопка</string>
+    <string name="settings_privacy_title">Конфиденциальность и настройки</string>
+    <string name="settings_use_real_voice">Использовать настоящие голосовые фрагменты</string>
+    <string name="settings_process_audio_offline">Обрабатывать аудио офлайн</string>
+    
+    <!-- Privacy Controls -->
+    <string name="settings_privacy_controls_title">Настройки конфиденциальности</string>
+    <string name="settings_retain_voice_recordings">Сохранять голосовые записи</string>
+    <string name="settings_view_privacy_policy">Просмотреть политику конфиденциальности</string>
+    <string name="settings_clear_all_data">Очистить все данные</string>
+    
+    <!-- Privacy Policy -->
+    <string name="privacy_policy_title">Политика конфиденциальности</string>
+    <string name="privacy_policy_back_button_content_description">Кнопка «Назад»</string>
+    
+    <!-- Clear Data Dialog -->
+    <string name="clear_data_confirmation_message">Вы уверены, что хотите удалить все данные? Это действие нельзя отменить.</string>
+    <string name="cancel">Отмена</string>
+    <string name="clear">Очистить</string>
+    <string name="data_cleared_successfully">Все данные были успешно удалены</string>
+    
+    <!-- WhatsApp Import -->
+    <string name="import_validating_archive">Проверка архива…</string>
+    <string name="import_extracting_archive">Распаковка архива…</string>
+    <string name="import_parsing_messages">Разбор сообщений чата…</string>
+    <string name="import_saving_messages">Сохранение сообщений…</string>
+    <string name="import_processing_voice_notes">Обработка голосовых заметок…</string>
+    <string name="import_analyzing_patterns">Анализ шаблонов беседы…</string>
+    <string name="import_complete">Импорт завершён!</string>
+    <string name="import_failed">Ошибка импорта</string>
+    
+    <!-- Voice Interaction -->
+    <string name="voice_mode_random">Случайный мем</string>
+    <string name="voice_mode_emotion">Эмоциональный ответ</string>
+    <string name="voice_press_hint">Нажмите и удерживайте 🎤, чтобы записать</string>
+    <string name="voice_recording_hint">Запись… Отпустите, чтобы остановить</string>
+    <string name="voice_no_response">Ответа пока нет</string>
+    <string name="voice_play">Воспроизвести</string>
+    <string name="voice_pause">Пауза</string>
+    
+    <!-- Chat Overlay -->
+    <string name="chat_title">Чат</string>
+    <string name="chat_empty_state">Начните разговор! 💬</string>
+    <string name="chat_input_hint">Введите сообщение…</string>
+    <string name="chat_send_button_content_description">Отправить сообщение</string>
+    <string name="chat_generating_response">Создаём ответ…</string>
+    <string name="chat_error_sending">Не удалось отправить сообщение</string>
+    <string name="chat_error_generating">Не удалось сгенерировать ответ</string>
+</resources>

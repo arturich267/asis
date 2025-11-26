@@ -1,5 +1,6 @@
 package com.asis.virtualcompanion.ui.chat
 
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,8 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asis.virtualcompanion.data.database.entity.ChatMessageEntity
 import com.asis.virtualcompanion.databinding.ItemMessageCompanionBinding
 import com.asis.virtualcompanion.databinding.ItemMessageUserBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class ChatMessageAdapter : ListAdapter<ChatMessageEntity, RecyclerView.ViewHolder>(ChatMessageDiffCallback()) {
 
@@ -55,7 +54,7 @@ class ChatMessageAdapter : ListAdapter<ChatMessageEntity, RecyclerView.ViewHolde
         private val binding: ItemMessageUserBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         
-        private val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
+        private val timeFormat = DateFormat.getTimeFormat(binding.root.context)
 
         fun bind(message: ChatMessageEntity) {
             binding.messageText.text = message.message
@@ -67,7 +66,7 @@ class ChatMessageAdapter : ListAdapter<ChatMessageEntity, RecyclerView.ViewHolde
         private val binding: ItemMessageCompanionBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         
-        private val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
+        private val timeFormat = DateFormat.getTimeFormat(binding.root.context)
 
         fun bind(message: ChatMessageEntity) {
             binding.messageText.text = message.message

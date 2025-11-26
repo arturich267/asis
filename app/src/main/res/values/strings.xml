@@ -1,16 +1,24 @@
 <resources>
+    <!-- General -->
     <string name="app_name">Asis Virtual Companion</string>
     <string name="welcome_title">Welcome to Asis</string>
     <string name="welcome_subtitle">Your Virtual Companion</string>
     <string name="loading">Loading...</string>
     <string name="error_occurred">An error occurred</string>
+    <string name="error_unknown_reason">Unknown error</string>
     <string name="retry">Retry</string>
+    <string name="ok">OK</string>
     
     <!-- Navigation titles -->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_settings">Settings</string>
     <string name="title_permissions">Permissions</string>
+    <string name="title_voice">Voice Interaction</string>
+    
+    <!-- Main Screen -->
+    <string name="main_welcome_message">Welcome to Asis Virtual Companion!</string>
+    <string name="main_loading_error">Failed to load data</string>
     
     <!-- Permissions Screen -->
     <string name="permissions_title">Permissions Required</string>
@@ -36,11 +44,16 @@
     <string name="home_welcome_subtitle">Your Virtual Companion</string>
     <string name="home_last_profile_summary">No profile imported yet</string>
     
+    <!-- Dashboard -->
+    <string name="dashboard_placeholder_text">Dashboard placeholder</string>
+    
     <!-- Settings Screen -->
     <string name="settings_archive_title">Archive Import</string>
     <string name="settings_select_archive">Select Archive</string>
     <string name="settings_no_archive_selected">No archive selected</string>
+    <string name="settings_archive_selected">Archive selected: %1$s</string>
     <string name="settings_parsing_archive">Parsing archive...</string>
+    <string name="settings_parsing_archive_progress">Parsing archive... %1$d%%</string>
     <string name="settings_theme_title">Appearance</string>
     <string name="settings_theme_preview">Theme Preview</string>
     <string name="settings_preview_button">Button</string>
@@ -53,6 +66,7 @@
     <string name="settings_retain_voice_recordings">Retain Voice Recordings</string>
     <string name="settings_view_privacy_policy">View Privacy Policy</string>
     <string name="settings_clear_all_data">Clear All Data</string>
+    <string name="settings_error_clear_data">Failed to clear data: %1$s</string>
     
     <!-- Privacy Policy -->
     <string name="privacy_policy_title">Privacy Policy</string>
@@ -73,15 +87,58 @@
     <string name="import_analyzing_patterns">Analyzing conversation patterns...</string>
     <string name="import_complete">Import complete!</string>
     <string name="import_failed">Import failed</string>
+    <string name="import_progress_detail_messages">%1$d messages</string>
+    <string name="import_progress_detail_voice_notes">%1$d voice notes</string>
+    <string name="import_notification_channel_name">WhatsApp Import</string>
+    <string name="import_notification_channel_description">Notifications for WhatsApp import progress</string>
+    <string name="import_notification_title">Importing WhatsApp Archive</string>
+    <string name="import_notification_starting">Starting import...</string>
+    <string name="import_notification_progress_with_details">%1$s - %2$s</string>
+    <string name="import_notification_complete_title">WhatsApp Import Complete</string>
+    <string name="import_notification_complete_message">Imported %1$d messages, %2$d voice notes, and %3$d phrases</string>
+    <string name="import_notification_failed_title">WhatsApp Import Failed</string>
+    <string name="import_notification_failed_message">Error: %1$s</string>
+    <string name="import_error_invalid_archive_file">Invalid archive file</string>
+    <string name="import_error_insufficient_storage">Not enough storage space. Need %1$s</string>
+    <string name="import_error_missing_chat_file">Chat file not found in archive</string>
+    <string name="import_error_open_archive">Failed to open archive file</string>
+    <string name="import_error_extraction_unknown">Unknown error during extraction</string>
+    <string name="import_error_extraction_zip">Error during ZIP extraction</string>
+    <string name="import_error_archive_empty">Archive file is empty or inaccessible</string>
+    <string name="import_error_not_zip">File is not a valid ZIP archive</string>
+    <string name="import_error_missing_chat_in_archive">Archive does not contain a _chat.txt file</string>
+    <string name="import_error_read_archive">Could not read archive file</string>
+    <string name="import_error_validating_archive">Error validating archive: %1$s</string>
+    <string name="import_error_unknown">Unknown error occurred</string>
+    <string name="import_file_size_bytes">%1$d B</string>
+    <string name="import_file_size_kilobytes">%1$.1f KB</string>
+    <string name="import_file_size_megabytes">%1$.1f MB</string>
+    <string name="import_file_size_gigabytes">%1$.1f GB</string>
     
     <!-- Voice Interaction -->
+    <string name="voice_interaction_mode_title">Interaction Mode</string>
     <string name="voice_mode_random">Random Meme</string>
     <string name="voice_mode_emotion">Emotion Response</string>
+    <string name="voice_mic_content_description">Record voice</string>
     <string name="voice_press_hint">Press and hold 🎤 to record</string>
     <string name="voice_recording_hint">Recording... Release to stop</string>
     <string name="voice_no_response">No response yet</string>
     <string name="voice_play">Play</string>
     <string name="voice_pause">Pause</string>
+    <string name="voice_replay">Replay</string>
+    <string name="voice_playback_time_progress">%1$s / %2$s</string>
+    <string name="voice_duration_format">%1$02d:%2$02d</string>
+    <string name="voice_processing_converting_audio">Converting audio...</string>
+    <string name="voice_processing_analyzing_emotion">Analyzing emotion...</string>
+    <string name="voice_processing_generating_response">Generating meme response...</string>
+    <string name="voice_processing_synthesizing_speech">Synthesizing speech...</string>
+    <string name="voice_error_start_recording">Failed to start recording: %1$s</string>
+    <string name="voice_error_stop_recording">Failed to stop recording: %1$s</string>
+    <string name="voice_error_missing_recording">No recording file found</string>
+    <string name="voice_error_convert_audio">Failed to convert audio: %1$s</string>
+    <string name="voice_error_generate_response">Failed to generate response: %1$s</string>
+    <string name="voice_error_synthesize_speech">Failed to synthesize speech: %1$s</string>
+    <string name="voice_error_prepare_audio">Failed to prepare audio for playback</string>
     
     <!-- Chat Overlay -->
     <string name="chat_title">Chat</string>
@@ -89,6 +146,8 @@
     <string name="chat_input_hint">Type a message...</string>
     <string name="chat_send_button_content_description">Send message</string>
     <string name="chat_generating_response">Generating response...</string>
+    <string name="chat_error_loading">Failed to load messages</string>
     <string name="chat_error_sending">Failed to send message</string>
+    <string name="chat_error_saving_response">Failed to save response</string>
     <string name="chat_error_generating">Failed to generate response</string>
 </resources>

@@ -270,6 +270,7 @@ The app requires the following permissions:
 
 - [**RELEASE.md**](RELEASE.md) - Comprehensive release build guide
 - [**INSTALL_GUIDE.md**](INSTALL_GUIDE.md) - End-user installation instructions
+- [**USER_MANUAL_RU.md**](USER_MANUAL_RU.md) - Руководство пользователя (RU) с локализованными скриншотами
 - [**RELEASE_SUMMARY.md**](RELEASE_SUMMARY.md) - Build status and summary
 - [**PRE_RELEASE_CHECKLIST.md**](PRE_RELEASE_CHECKLIST.md) - Pre-release verification
 - [**CHANGELOG.md**](CHANGELOG.md) - Version history and changes
